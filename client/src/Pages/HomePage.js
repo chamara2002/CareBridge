@@ -6,8 +6,9 @@ import "./HomePage.css";
 import image1 from "../Images/image1.jpg";
 import image2 from "../Images/image2.jpg";
 import image3 from "../Images/image3.jpg";
+import image4 from "../Images/image4.jpg";
 
-const images = [image1, image2, image3];
+const images = [image1, image2, image3, image4];
 
 const HomePage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -32,7 +33,7 @@ const HomePage = () => {
           />
         ))}
         <div className="overlay">
-          <h1>Welcome to CareBridge</h1>
+          <h1>Welcome to CareBridge!</h1>
           <p>Connecting Midwifes and Mothers for a Better Tomorrow</p>
         </div>
       </div>
