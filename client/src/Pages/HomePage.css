@@ -47,7 +47,7 @@
     color: white; /* White text */
     margin-top: 10px;
     background-color: #ffffffa7; /* Semi-transparent white background */
-    border-radius: 5px;
+    border-radius: 3px;
     width: 720px;
     padding-top: 3px; /* Increase padding at the top */
     padding-bottom: 8px; /* Increase padding at the bottom */
@@ -100,3 +100,4 @@
     font-size: 16px;
     color: #666;
 }
+
