@@ -2,12 +2,17 @@
   background-color: #E4726B; /* Coral */
   color: white;
   text-align: center;
-  padding: 15px;
   margin-top: 20px;
+}
+
+.footer-content{
+  margin-top: 10px;
+  padding: 15px;
 }
 
 .footer-links {
   margin-top: 10px;
+  padding: 15px;
 }
 
 .footer-links a {
@@ -24,6 +29,6 @@
 .footer-bottom {
   background-color: #e25f58; /* Muted Coral */
   padding: 10px;
-  margin-top: 10px;
+  margin-top: 50px;
   font-size: 14px;
 }
