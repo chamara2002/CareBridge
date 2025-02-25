@@ -1,0 +1,102 @@
+.homepage {
+    background-color: #FFFFFF; /* White */
+    padding: 20px;
+  }
+  
+  .slider {
+    position: center;
+    width: 103.02%;
+    height: 100vh; /* Full screen height */
+    overflow: hidden;
+    margin-top: -20px;
+    margin-left: -20px;
+  }
+  
+  .slider img {
+    position: absolute;
+    width: 100%;
+    height: 100%; /* Ensure the image covers the entire screen */
+    object-fit: cover; /* Maintain aspect ratio */
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  .slider img.active {
+    opacity: 1;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    padding: 20px;
+  }
+  
+  .overlay h1 {
+    font-size: 48px;
+    color: white; /* White text */
+    margin: 0;
+    text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5); /* Shadow for the title */
+  }
+  
+  .overlay p {
+    font-size: 20px;
+    color: white; /* White text */
+    margin-top: 10px;
+    background-color: #ffffffa7; /* Semi-transparent white background */
+    border-radius: 5px;
+    width: 720px;
+    padding-top: 3px; /* Increase padding at the top */
+    padding-bottom: 8px; /* Increase padding at the bottom */
+    text-align: center; /* Ensure text is centered inside the box */
+  }
+  
+  
+  .homepage h1 {
+    text-align: center;
+    font-size: 45px;
+    color: #ffffff; /* Dark Gray */
+    margin-top: 20px;
+  }
+  
+  .homepage p {
+    text-align: center;
+    font-size: 25px;
+    color: #F88379;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+
+  .home-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    padding: 40px 20px;
+}
+
+  .feature-card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.feature-card h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    font-size: 16px;
+    color: #666;
+}
