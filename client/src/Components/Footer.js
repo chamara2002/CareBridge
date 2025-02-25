@@ -11,7 +11,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="footer-bottom">
-        Designed with by CareBridge Team
+        Created with by CareBridge Team
       </div>
     </footer>
   );

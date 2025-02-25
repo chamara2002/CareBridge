@@ -2,6 +2,8 @@
   background-color: #F88379; /* Dark Pink */
   padding: 15px;
   color: white;
+  position: relative; /* Ensure it controls child elements */
+  z-index: 1000;
 }
 
 .container {
@@ -58,6 +60,7 @@
     width: 100%;
     text-align: center;
     padding: 10px 0;
+    z-index: 1002;
   }
 
   .nav-links.open {
@@ -66,5 +69,7 @@
 
   .menu-toggle {
     display: block;
+    position: relative;
+    z-index: 1100;
   }
 }

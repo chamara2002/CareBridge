@@ -1,4 +1,3 @@
-// src/pages/HomePage.js
 import { useState, useEffect } from "react";
 import "./HomePage.css";
 
@@ -38,19 +37,19 @@ const HomePage = () => {
         </div>
       </div>
       <section className="home-content">
-                <div className="feature-card">
-                    <h3>Pregnancy Care</h3>
-                    <p>Access expert advice and support for mothers during pregnancy.</p>
-                </div>
-                <div className="feature-card">
-                    <h3>Postpartum Support</h3>
-                    <p>Get personalized guidance for recovery after childbirth.</p>
-                </div>
-                <div className="feature-card">
-                    <h3>Midwife Network</h3>
-                    <p>Connect with certified midwives in your area for trusted care.</p>
-                </div>
-        </section>
+        <div className="feature-card">
+          <h3>Pregnancy Care</h3>
+          <p>Access expert advice and support for mothers during pregnancy.</p>
+        </div>
+        <div className="feature-card">
+          <h3>Postpartum Support</h3>
+          <p>Get personalized guidance for recovery after childbirth.</p>
+        </div>
+        <div className="feature-card">
+          <h3>Midwife Network</h3>
+          <p>Connect with certified midwives in your area for trusted care.</p>
+        </div>
+      </section>
     </div>
   );
 };
