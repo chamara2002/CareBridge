@@ -1,0 +1,29 @@
+.footer {
+  background-color: #E4726B; /* Coral */
+  color: white;
+  text-align: center;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.footer-links {
+  margin-top: 10px;
+}
+
+.footer-links a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.footer-links a:hover {
+  color: #FFB6A3; /* Light Pink */
+}
+
+.footer-bottom {
+  background-color: #e25f58; /* Muted Coral */
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+}
