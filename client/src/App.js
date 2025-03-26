@@ -1,16 +1,25 @@
-import './App.css';
-import Navbar from "./Components/Navbar";
-import HomePage from "./Pages/HomePage";
-import Footer from "./Components/Footer";
+// App.js
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './Pages/HomePage';
+import Dashboard from './Pages/Dashboard';
+import MothersManagement from './Pages/MidMothers';
+import NewbornManagement from './Pages/MidNewborns';
+import Navbar from './Components/Navbar';
+import Footer from './Components/Footer';
 
-function App() {
+const App = () => {
   return (
-    <div>
+    <Router>
       <Navbar />
-      <HomePage />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/MidMothers" element={<MothersManagement />} />
+        <Route path="/MidNewborns" element={<NewbornManagement />} />
+      </Routes>
       <Footer />
-    </div>
+    </Router>
   );
-}
+};
 
 export default App;
