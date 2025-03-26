@@ -1,10 +1,9 @@
-// Dashboard.js
 import MidMenu from './MidMenu';
 
 const Dashboard = () => {
   return (
     <MidMenu>
-      <h1>Welcome to Your Dashboard</h1>
+      <h1>Welcome to the Midwife Dashboard</h1>
       <div className="stats">
         <div className="card">Total Appointments: 12</div>
         <div className="card">New Messages: 5</div>
