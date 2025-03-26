@@ -133,3 +133,9 @@ tr.status-critical {
 tr.status-needs-attention {
   background-color: #fffaf1;
 }
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
