@@ -22,7 +22,7 @@ const NewbornManagement = () => {
   useEffect(() => {
     const fetchNewborns = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/newborns');
+        const response = await axios.get('http://localhost:5000/api/midnewborns');
         setNewborns(response.data);
       } catch (error) {
         console.error('Error fetching newborns:', error);
@@ -75,12 +75,12 @@ const NewbornManagement = () => {
           console.error('Error: Newborn ID is missing.');
           return;
         }
-        await axios.put(`http://localhost:5000/api/newborns/${formData._id}`, formData);
+        await axios.put(`http://localhost:5000/api/midnewborns/${formData._id}`, formData);
         setNewborns(newborns.map((newborn) =>
           newborn._id === formData._id ? formData : newborn
         ));
       } else {
-        const response = await axios.post('http://localhost:5000/api/newborns', formData);
+        const response = await axios.post('http://localhost:5000/api/midnewborns', formData);
         setNewborns([...newborns, response.data]);
       }
       resetForm();
@@ -106,7 +106,7 @@ const NewbornManagement = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/newborns/${id}`);
+      await axios.delete(`http://localhost:5000/api/midnewborns/${id}`);
       setNewborns(newborns.filter((newborn) => newborn._id !== id));
     } catch (error) {
       console.error('Error deleting newborn:', error);
