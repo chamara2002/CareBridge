@@ -55,6 +55,10 @@
   cursor: pointer;
 }
 
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
 .btn-secondary {
   background: #aab2bd;
   color: white;
@@ -112,17 +116,17 @@ th {
 }
 
 .status-healthy {
-  background-color: #a0d468;
+  background-color: #b4cf97 !important;
   color: white;
 }
 
 .status-needs-attention {
-  background-color: #ffce54;
+  background-color: #ffe6ab !important;
   color: white;
 }
 
 .status-critical {
-  background-color: #ed5565;
+  background-color: #fca9a9 !important;
   color: white;
 }
 
