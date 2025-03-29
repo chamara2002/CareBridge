@@ -1,4 +1,5 @@
 const Appointment = require("../models/Appointment");
+const User = require("../models/user")
 
 const createAppointment = async (req, res) => {
     try {
@@ -36,6 +37,30 @@ const createAppointment = async (req, res) => {
         res.status(201).json({ message: "Appointment created successfully!", appointment: newAppointment });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+const getMotherDetails = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const mother = await User.findById(id);
+        if (!mother) {
+            return res.status(404).json({ message: "Mother not found" });
+        }
+        res.status(200).json(mother);
+    } catch (error) {
+        console.error("Error fetching mother details:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+const getMidwives = async (req, res) => {
+    try {
+        const midwives = await User.find({ role: "midwife" }).select("name _id");
+        res.json(midwives);
+    } catch (error) {
+        console.error("Error fetching midwives:", error);
+        res.status(500).json({ message: "Server error" });
     }
 };
 
@@ -116,4 +141,4 @@ const deleteAppointment = async (req, res) => {
 };
 
 // Export all functions in a single line
-module.exports = { createAppointment, getAppointments, getAppointmentById, updateAppointment, deleteAppointment, getAppointmentsByDate };
+module.exports = { createAppointment, getAppointments, getAppointmentById, updateAppointment, deleteAppointment, getAppointmentsByDate, getMidwives, getMotherDetails };

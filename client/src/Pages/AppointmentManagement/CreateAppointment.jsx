@@ -2,12 +2,48 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { jwtDecode } from "jwt-decode";
 
 const AppointmentForm = () => {
-    const { register, handleSubmit, reset, formState: { errors, isValid } } = useForm({ mode: "onChange" });
+    const { register, handleSubmit, setValue, reset, formState: { errors, isValid } } = useForm({ mode: "onChange" });
     const [step, setStep] = useState(1);
     const [bookedTimes, setBookedTimes] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
+    const [midwives, setMidwives] = useState([]);
+    const [userId, setUserId] = useState(null);
+
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            const decoded = jwtDecode(token);
+            setUserId(decoded.userId);
+
+            // Fetch user details
+            axios.get(`http://localhost:5000/api/appointments/mothers/${decoded.userId}`)
+                .then(response => {
+                    const userData = response.data;
+                    setValue("fullName", userData.name);
+                    setValue("nic", userData.nic);
+                    setValue("emailId", userData.email);
+                    setValue("address", userData.address);
+                })
+                .catch(error => console.error("Error fetching user data:", error));
+        }
+    }, [setValue]);
+
+    useEffect(() => {
+        const fetchMidwives = async () => {
+            try {
+                const response = await axios.get("http://localhost:5000/api/appointments/midwives");
+                setMidwives(response.data); // Assuming response.data is an array of midwives
+            } catch (error) {
+                console.error("Error fetching midwives:", error);
+            }
+        };
+
+        fetchMidwives();
+    }, []);
 
     useEffect(() => {
         const fetchBookedAppointments = async () => {
@@ -114,9 +150,21 @@ const AppointmentForm = () => {
                         <>
                             <h2 className="text-2xl font-semibold">Appointment Details</h2>
                             <div className="grid gap-3">
-                                <div className="flex flex-col">
+                                {/* <div className="flex flex-col">
                                     <label>Preferred Midwife:</label>
                                     <input {...register("preferredMidwife")} placeholder="Preferred Midwife" className="border p-2 rounded" />
+                                </div> */}
+                                <div className="flex flex-col">
+                                    <label>Preferred Midwife:</label>
+                                    <select {...register("preferredMidwife", { required: "Midwife selection is required" })} className="border p-2 rounded">
+                                        <option value="">Select a Midwife</option>
+                                        {midwives.map((midwife) => (
+                                            <option key={midwife._id} value={midwife.name}>
+                                                {midwife.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.preferredMidwife && <span className="text-red-500">{errors.preferredMidwife.message}</span>}
                                 </div>
 
                                 <div className="flex flex-col">
