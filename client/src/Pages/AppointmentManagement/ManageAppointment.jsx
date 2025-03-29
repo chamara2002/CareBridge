@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const ManageAppointments = () => {
     const [appointments, setAppointments] = useState([]);
@@ -7,6 +8,7 @@ const ManageAppointments = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [errors, setErrors] = useState({});
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         fetchAppointments();
@@ -26,16 +28,29 @@ const ManageAppointments = () => {
         setIsModalOpen(true);
     };
 
-    const handleDelete = async (id) => {
-        if (window.confirm("Are you sure you want to delete this appointment?")) {
-            try {
-                await axios.delete(`http://localhost:5000/api/appointments/delete/${id}`);
-                fetchAppointments();
-            } catch (error) {
-                console.error("Error deleting appointment:", error);
-            }
+    const handleDelete = async (id, suitableTime) => {
+    // Get the current time and the appointment time
+    const appointmentTime = new Date(suitableTime);
+    const now = new Date();
+    const timeDiff = appointmentTime - now;
+
+    // Check if the appointment is less than 24 hours away
+    if (timeDiff < 24 * 60 * 60 * 1000) {
+        // Display an alert if it's within the 24-hour period
+        // alert("Cancellation time has expired. You should have canceled at least 24 hours before.");
+        setErrorMessage("Cancellation time has expired. You should have canceled at least 24 hours before.");
+        return;
+    }
+
+    if (window.confirm("Are you sure you want to delete this appointment?")) {
+        try {
+            await axios.delete(`http://localhost:5000/api/appointments/delete/${id}`);
+            fetchAppointments();
+        } catch (error) {
+            console.error("Error deleting appointment:", error);
         }
-    };
+    }
+};
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -81,13 +96,6 @@ const ManageAppointments = () => {
         errors.emailId = "Enter a valid email address";
     }
 
-    // Suitable Time (Date & Time must be in the future)
-    if (!selectedAppointment.suitableTime) {
-        errors.suitableTime = "Date & Time is required";
-    } else if (new Date(selectedAppointment.suitableTime) <= new Date()) {
-        errors.suitableTime = "Appointment date must be in the future";
-    }
-
     return errors;
 };
 
@@ -104,11 +112,11 @@ const ManageAppointments = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#AFCBFF]">
+        <div className="min-h-screen">
             <div className="max-w-5xl mx-auto p-6 rounded-lg">
                 <h1 className="text-4xl font-semibold mb-4 text-center">Manage Appointments</h1>
                 <div className="w-full text-right">
-                    <button className="bg-pink-500 text-white text-right px-3 py-3 font-semibold rounded">Create Appointment</button>
+                    <a href="/createappointment"><button className="bg-[#F88379] text-white text-right px-3 py-3 font-semibold rounded">Create Appointment</button></a>
                 </div>
                 <table className="w-full border-collapse bg-white shadow-md rounded-lg mt-10">
                     <thead>
@@ -120,15 +128,30 @@ const ManageAppointments = () => {
                             <th className="p-2">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-[#A7C7E7] shadow-lg">
+                    <tbody className="bg-[#fff4f2] shadow-lg">
                         {appointments.map((appointment) => (
                             <tr key={appointment._id} className="text-left border-b">
                                 <td className="p-2">{appointment.appointmentId}</td>
                                 <td className="p-2">{appointment.preferredMidwife || "N/A"}</td>
                                 <td className="p-2">{new Date(appointment.suitableTime).toLocaleString()}</td>
                                 <td className="p-2 flex gap-2">
-                                    <button onClick={() => handleView(appointment)} className="bg-pink-500 text-white px-3 py-1 rounded">View</button>
-                                    <button onClick={() => handleDelete(appointment._id)} className="text-red-500 hover:underline">🗑️</button>
+                                    <button onClick={() => handleView(appointment)} className="bg-[#F88379] text-white px-3 py-1 rounded">View</button>
+                                    <button onClick={() => handleDelete(appointment._id, appointment.suitableTime)} className="text-red-500 hover:underline">🗑️</button>
+                                    {errorMessage && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.8 }}
+                                                className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-opacity-95"
+                                            >
+                                            <div className="bg-white p-4 rounded-lg shadow-lg text-center">
+                                                <p className="text-red-600 font-semibold">{errorMessage}</p>
+                                                <button onClick={() => setErrorMessage("")} className="mt-2 px-4 py-2 bg-red-500 text-white rounded">
+                                                    OK
+                                                </button>
+                                            </div>
+                                        </motion.div>
+                                    )}
                                 </td>
                                 <td className="p-2 text-white text-center font-bold">
                                     <span className={`px-3 py-1 rounded ${
@@ -224,14 +247,18 @@ const ManageAppointments = () => {
                                 <div className="flex flex-col">
                                     <label htmlFor="appointmentType" className="font-medium mb-2">Appointment Type:</label>
                                     {isEditing ? (
-                                        <input
-                                            type="text"
+                                        <select
                                             name="appointmentType"
                                             value={selectedAppointment.appointmentType}
                                             onChange={handleChange}
                                             className="border p-2 rounded-md"
                                             id="appointmentType"
-                                        />
+                                        >
+                                            <option value="">Select Appointment Type</option>
+                                            <option value="Prenatal Checkup">Prenatal Checkup</option>
+                                            <option value="Postpartum Visit">Postpartum Visit</option>
+                                            <option value="General Consultation">General Consultation</option>
+                                        </select>
                                     ) : (
                                         <p>{selectedAppointment.appointmentType}</p>
                                     )}
@@ -240,19 +267,7 @@ const ManageAppointments = () => {
                                 {/* Suitable Time */}
                                 <div className="flex flex-col">
                                     <label htmlFor="suitableTime" className="font-medium mb-2">Date & Time:</label>
-                                    {isEditing ? (
-                                        <input
-                                            type="datetime-local"
-                                            name="suitableTime"
-                                            value={new Date(selectedAppointment.suitableTime).toISOString().slice(0, 16)}
-                                            onChange={handleChange}
-                                            className="border p-2 rounded-md"
-                                            id="suitableTime"
-                                        />
-                                    ) : (
-                                        <p>{new Date(selectedAppointment.suitableTime).toLocaleString()}</p>
-                                    )}
-                                    {errors.suitableTime && <p className="text-red-500 text-sm">{errors.suitableTime}</p>}
+                                    <p>{new Date(selectedAppointment.suitableTime).toLocaleString()}</p>
                                 </div>
                             </div>
 
@@ -262,7 +277,7 @@ const ManageAppointments = () => {
                                     setIsModalOpen(false);
                                     setIsEditing(false);
                                 }}
-                                className="bg-pink-500 text-white px-4 py-2 rounded-md"
+                                className="bg-[#F88379] text-white px-4 py-2 rounded-md"
                                 >
                                 Close
                                 </button>

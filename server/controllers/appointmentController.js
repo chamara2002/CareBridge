@@ -2,16 +2,25 @@ const Appointment = require("../models/Appointment");
 
 const createAppointment = async (req, res) => {
     try {
-        const {
-            fullName, contactNo, emailId, nic, address,
-            preferredMidwife, appointmentType, suitableTime, privacyAgreement
-        } = req.body;
+        const { fullName, contactNo, emailId, nic, address, preferredMidwife, appointmentType, suitableTime } = req.body;
 
-        // Validation: Required fields
-        if (!fullName || !contactNo || !emailId || !nic || !address || !appointmentType || !suitableTime) {
-            return res.status(400).json({ message: "All required fields must be filled" });
+        // Convert suitableTime to Date object
+        const appointmentTime = new Date(suitableTime);
+
+        // Define time range (±30 minutes)
+        const startRange = new Date(appointmentTime.getTime() - 30 * 60 * 1000); // 30 minutes before
+        const endRange = new Date(appointmentTime.getTime() + 30 * 60 * 1000);   // 30 minutes after
+
+        // Check if any appointment exists in the ±30 min range
+        const existingAppointment = await Appointment.findOne({
+            suitableTime: { $gte: startRange, $lte: endRange } // Check within the time range
+        });
+
+        if (existingAppointment) {
+            return res.status(400).json({ message: "This time slot is already booked within 30 minutes. Please select another time." });
         }
 
+        // Create new appointment
         const newAppointment = new Appointment({
             fullName,
             contactNo,
@@ -20,8 +29,7 @@ const createAppointment = async (req, res) => {
             address,
             preferredMidwife,
             appointmentType,
-            suitableTime,
-            privacyAgreement
+            suitableTime
         });
 
         await newAppointment.save();
@@ -87,8 +95,20 @@ const updateAppointment = async (req, res) => {
 
 const deleteAppointment = async (req, res) => {
     try {
-        const deletedAppointment = await Appointment.findByIdAndDelete(req.params.id);
-        if (!deletedAppointment) return res.status(404).json({ message: "Appointment not found" });
+        const appointment = await Appointment.findById(req.params.id);
+        if (!appointment) return res.status(404).json({ message: "Appointment not found" });
+
+        const appointmentTime = new Date(appointment.suitableTime);
+        const now = new Date();
+        const timeDiff = appointmentTime - now;
+
+        // Check if the appointment is less than 24 hours away
+        if (timeDiff < 24 * 60 * 60 * 1000) {
+            return res.status(403).json({ message: "Cancellation time has expired. You should have canceled at least 24 hours before." });
+        }
+
+        // Proceed with deletion
+        await Appointment.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: "Appointment deleted successfully" });
     } catch (error) {
         res.status(500).json({ error: error.message });
