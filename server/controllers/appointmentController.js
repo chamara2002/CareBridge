@@ -75,9 +75,22 @@ const getAppointments = async (req, res) => {
 
 const getAppointmentById = async (req, res) => {
     try {
-        const appointment = await Appointment.findById(req.params.id);
-        if (!appointment) return res.status(404).json({ message: "Appointment not found" });
-        res.status(200).json(appointment);
+        const user = await User.findById(req.params.id); 
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const emailId = user.email;
+        const appointments = await Appointment.find({ emailId: emailId });
+
+        if (appointments.length === 0) {
+            return res.status(404).json({ message: "No appointments found for this user" });
+        }
+        console.log("came here");
+        if (!appointments) return res.status(404).json({ message: "Appointment not found" });
+        console.log(appointments);
+        res.status(200).json(appointments);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

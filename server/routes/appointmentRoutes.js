@@ -13,3 +13,4 @@ router.get("/midwives", getMidwives);
 router.get("/mothers/:id", getMotherDetails);
 
 module.exports = router;
+ 

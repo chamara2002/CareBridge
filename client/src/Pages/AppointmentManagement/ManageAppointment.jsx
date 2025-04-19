@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { jwtDecode } from "jwt-decode";
+import { useForm } from "react-hook-form";
 
 const ManageAppointments = () => {
     const [appointments, setAppointments] = useState([]);
@@ -9,14 +11,32 @@ const ManageAppointments = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [errors, setErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState("");
+    const [midwives, setMidwives] = useState([]);
+    const token = localStorage.getItem("token");
+    const { register } = useForm({ mode: "onChange" });
 
     useEffect(() => {
         fetchAppointments();
     }, []);
 
+    useEffect(() => {
+        const fetchMidwives = async () => {
+            try {
+                const response = await axios.get("http://localhost:5000/api/appointments/midwives");
+                setMidwives(response.data);
+            } catch (error) {
+                console.error("Error fetching midwives:", error);
+            }
+        };
+    
+        fetchMidwives();
+    }, []);
+    
     const fetchAppointments = async () => {
+        const decoded = jwtDecode(token);
+        const id = decoded.userId;
         try {
-            const response = await axios.get("http://localhost:5000/api/appointments/get");
+            const response = await axios.get(`http://localhost:5000/api/appointments/getbyid/${id}`);
             setAppointments(response.data);
         } catch (error) {
             console.error("Error fetching appointments:", error);
@@ -29,28 +49,24 @@ const ManageAppointments = () => {
     };
 
     const handleDelete = async (id, suitableTime) => {
-    // Get the current time and the appointment time
-    const appointmentTime = new Date(suitableTime);
-    const now = new Date();
-    const timeDiff = appointmentTime - now;
+        const appointmentTime = new Date(suitableTime);
+        const now = new Date();
+        const timeDiff = appointmentTime - now;
 
-    // Check if the appointment is less than 24 hours away
-    if (timeDiff < 24 * 60 * 60 * 1000) {
-        // Display an alert if it's within the 24-hour period
-        // alert("Cancellation time has expired. You should have canceled at least 24 hours before.");
-        setErrorMessage("Cancellation time has expired. You should have canceled at least 24 hours before.");
-        return;
-    }
-
-    if (window.confirm("Are you sure you want to delete this appointment?")) {
-        try {
-            await axios.delete(`http://localhost:5000/api/appointments/delete/${id}`);
-            fetchAppointments();
-        } catch (error) {
-            console.error("Error deleting appointment:", error);
+        if (timeDiff < 24 * 60 * 60 * 1000) {
+            setErrorMessage("Cancellation time has expired. You should have canceled at least 24 hours before.");
+            return;
         }
-    }
-};
+
+        if (window.confirm("Are you sure you want to delete this appointment?")) {
+            try {
+                await axios.delete(`http://localhost:5000/api/appointments/delete/${id}`);
+                fetchAppointments();
+            } catch (error) {
+                console.error("Error deleting appointment:", error);
+            }
+        }
+    };
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -73,32 +89,28 @@ const ManageAppointments = () => {
     };
 
     const validateForm = () => {
-    const errors = {};
+        const errors = {};
 
-    // Full Name Validation (Only letters, at least 2 chars)
-    if (!selectedAppointment.fullName.trim()) {
-        errors.fullName = "Full Name is required";
-    } else if (!/^[A-Za-z\s]{2,}$/.test(selectedAppointment.fullName)) {
-        errors.fullName = "Full Name must contain only letters and at least 2 characters";
-    }
+        if (!selectedAppointment.fullName.trim()) {
+            errors.fullName = "Full Name is required";
+        } else if (!/^[A-Za-z\s]{2,}$/.test(selectedAppointment.fullName)) {
+            errors.fullName = "Full Name must contain only letters and at least 2 characters";
+        }
 
-    // Contact Number Validation (Sri Lankan format)
-    if (!selectedAppointment.contactNo.trim()) {
-        errors.contactNo = "Contact No is required";
-    } else if (!/^0\d{9}$/.test(selectedAppointment.contactNo)) {
-        errors.contactNo = "Contact No must be a valid 10-digit number";
-    }
+        if (!selectedAppointment.contactNo.trim()) {
+            errors.contactNo = "Contact No is required";
+        } else if (!/^0\d{9}$/.test(selectedAppointment.contactNo)) {
+            errors.contactNo = "Contact No must be a valid 10-digit number";
+        }
 
-    // Email Validation
-    if (!selectedAppointment.emailId.trim()) {
-        errors.emailId = "A valid Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(selectedAppointment.emailId)) {
-        errors.emailId = "Enter a valid email address";
-    }
+        if (!selectedAppointment.emailId.trim()) {
+            errors.emailId = "A valid Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(selectedAppointment.emailId)) {
+            errors.emailId = "Enter a valid email address";
+        }
 
-    return errors;
-};
-
+        return errors;
+    };
 
     const handleChange = (e) => {
         setSelectedAppointment({
@@ -107,7 +119,7 @@ const ManageAppointments = () => {
         });
         setErrors({
             ...errors,
-            [e.target.name]: "" // Clear the error for the changed field
+            [e.target.name]: ""
         });
     };
 
@@ -230,14 +242,21 @@ const ManageAppointments = () => {
                                 <div className="flex flex-col">
                                     <label htmlFor="preferredMidwife" className="font-medium mb-2">Preferred Midwife:</label>
                                     {isEditing ? (
-                                        <input
-                                            type="text"
-                                            name="preferredMidwife"
-                                            value={selectedAppointment.preferredMidwife || ""}
-                                            onChange={handleChange}
-                                            className="border p-2 rounded-md"
-                                            id="preferredMidwife"
-                                        />
+                                        <select
+                                        {...register("preferredMidwife", { required: "Midwife selection is required" })}
+                                        defaultValue={selectedAppointment.preferredMidwife || ""}
+                                        onChange={handleChange}
+                                        name="preferredMidwife"
+                                        id="preferredMidwife"
+                                        className="border p-2 rounded"
+                                        >
+                                        <option value="">Select Preferred Midwife</option>
+                                        {midwives.map((midwife) => (
+                                            <option key={midwife._id} value={midwife.name}>
+                                            {midwife.name}
+                                            </option>
+                                        ))}
+                                        </select>
                                     ) : (
                                         <p>{selectedAppointment.preferredMidwife || "N/A"}</p>
                                     )}
