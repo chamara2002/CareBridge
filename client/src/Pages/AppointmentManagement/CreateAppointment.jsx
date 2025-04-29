@@ -1,12 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+<<<<<<< HEAD
 import { motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
+=======
+>>>>>>> parent of 0793327 (Appointment Management Completed but not integrated)
 
 const AppointmentForm = () => {
     const { register, handleSubmit, setValue, reset, formState: { errors, isValid } } = useForm({ mode: "onChange" });
     const [step, setStep] = useState(1);
+<<<<<<< HEAD
     const [bookedTimes, setBookedTimes] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [midwives, setMidwives] = useState([]);
@@ -74,6 +78,8 @@ const AppointmentForm = () => {
             setErrorMessage("");
         }
     };
+=======
+>>>>>>> parent of 0793327 (Appointment Management Completed but not integrated)
 
     const onSubmit = async (data) => {
         try {
@@ -89,8 +95,8 @@ const AppointmentForm = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="max-w-3xl w-full p-8 bg-[#f0e8e8] shadow-lg rounded-lg min-h-[500px]">
+        <div className="min-h-screen flex items-center justify-center bg-[#AFCBFF]">
+            <div className="max-w-3xl w-full p-8 bg-[#E3F2FD] shadow-lg rounded-lg min-h-[500px]">
                 <h1 className="text-4xl font-semibold mb-6 text-center">Book an Appointment</h1>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
                     {step === 1 && (
@@ -140,8 +146,8 @@ const AppointmentForm = () => {
                             </div>
 
                             <div className="flex justify-between mt-4">
-                                <a href="/manageappointment"><button type="button" className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-600">Cancel</button></a>
-                                <button type="button" onClick={() => setStep(2)} disabled={!isValid} className={`py-2 px-4 rounded ${isValid ? "bg-[#F88379] hover:bg-[#ea9890] text-white" : "bg-gray-300 text-gray-600 cursor-not-allowed"}`}>Next</button>
+                                <button type="button" className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-600">Cancel</button>
+                                <button type="button" onClick={() => setStep(2)} disabled={!isValid} className={`py-2 px-4 rounded ${isValid ? "bg-pink-500 hover:bg-pink-700 text-white" : "bg-gray-300 text-gray-600 cursor-not-allowed"}`}>Next</button>
                             </div>
                         </>
                     )}
@@ -180,34 +186,13 @@ const AppointmentForm = () => {
 
                                 <div className="flex flex-col">
                                     <label>Suitable Time:</label>
-                                    <input
-                                    {...register("suitableTime", { required: "Suitable Time is required" })}
-                                    type="datetime-local"
-                                    className="border p-2 rounded"
-                                    min={new Date().toISOString().slice(0, 16)}
-                                    onChange={handleTimeChange}
-                                />
-                                    {errorMessage && (
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.8 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.8 }}
-                                            className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
-                                        >
-                                            <div className="bg-white p-4 rounded-lg shadow-lg text-center">
-                                                <p className="text-red-600 font-semibold">{errorMessage}</p>
-                                                <button onClick={() => setErrorMessage("")} className="mt-2 px-4 py-2 bg-red-500 text-white rounded">
-                                                    OK
-                                                </button>
-                                            </div>
-                                        </motion.div>
-                                    )}
+                                    <input {...register("suitableTime", { required: "Suitable Time is required" })} type="datetime-local" className="border p-2 rounded" />
                                     {errors.suitableTime && <span className="text-red-500">{errors.suitableTime.message}</span>}
                                 </div>
                             </div>
                             <div className="flex justify-between mt-4">
                                 <button type="button" onClick={() => setStep(1)} className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-600">Previous</button>
-                                <button type="submit" className="bg-[#F88379] text-white py-2 px-4 rounded hover:bg-[#ea9890]">Submit</button>
+                                <button type="submit" className="bg-pink-500 text-white py-2 px-4 rounded hover:bg-pink-700">Submit</button>
                             </div>
                         </>
                     )}
