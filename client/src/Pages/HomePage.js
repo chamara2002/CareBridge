@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import "./HomePage.css";
 
-// Import images from src/Images/
 import image1 from "../Images/image1.jpg";
 import image2 from "../Images/image2.jpg";
 import image3 from "../Images/image3.jpg";
@@ -15,8 +14,7 @@ const HomePage = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 10000); // Change image every 10 seconds
-
+    }, 10000); 
     return () => clearInterval(interval);
   }, []);
 
