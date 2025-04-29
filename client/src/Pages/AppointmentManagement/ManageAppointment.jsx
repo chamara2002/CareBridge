@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
 import { useForm } from "react-hook-form";
+import "./ManageAppointment.css";
 
 const ManageAppointments = () => {
     const [appointments, setAppointments] = useState([]);
@@ -22,7 +23,7 @@ const ManageAppointments = () => {
     useEffect(() => {
         const fetchMidwives = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/appointments/midwives");
+                const response = await axios.get("http://localhost:5006/api/appointments/midwives");
                 setMidwives(response.data);
             } catch (error) {
                 console.error("Error fetching midwives:", error);
@@ -36,7 +37,7 @@ const ManageAppointments = () => {
         const decoded = jwtDecode(token);
         const id = decoded.userId;
         try {
-            const response = await axios.get(`http://localhost:5000/api/appointments/getbyid/${id}`);
+            const response = await axios.get(`http://localhost:5006/api/appointments/getbyid/${id}`);
             setAppointments(response.data);
         } catch (error) {
             console.error("Error fetching appointments:", error);
@@ -60,7 +61,7 @@ const ManageAppointments = () => {
 
         if (window.confirm("Are you sure you want to delete this appointment?")) {
             try {
-                await axios.delete(`http://localhost:5000/api/appointments/delete/${id}`);
+                await axios.delete(`http://localhost:5006/api/appointments/delete/${id}`);
                 fetchAppointments();
             } catch (error) {
                 console.error("Error deleting appointment:", error);
@@ -80,7 +81,7 @@ const ManageAppointments = () => {
         }
 
         try {
-            await axios.put(`http://localhost:5000/api/appointments/update/${selectedAppointment._id}`, selectedAppointment);
+            await axios.put(`http://localhost:5006/api/appointments/update/${selectedAppointment._id}`, selectedAppointment);
             fetchAppointments(); 
             setIsEditing(false); 
         } catch (error) {
@@ -124,51 +125,53 @@ const ManageAppointments = () => {
     };
 
     return (
-        <div className="min-h-screen">
-            <div className="max-w-5xl mx-auto p-6 rounded-lg">
-                <h1 className="text-4xl font-semibold mb-4 text-center">Manage Appointments</h1>
-                <div className="w-full text-right">
-                    <a href="/createappointment"><button className="bg-[#F88379] text-white text-right px-3 py-3 font-semibold rounded">Create Appointment</button></a>
+        <div className="appointments-container">
+            <div className="appointments-wrapper">
+                <h1 className="appointments-title">Manage Appointments</h1>
+                <div className="create-btn-container">
+                    <a href="/createappointment">
+                        <button className="create-appointment-btn">Create Appointment</button>
+                    </a>
                 </div>
-                <table className="w-full border-collapse bg-white shadow-md rounded-lg mt-10">
+                <table className="appointments-table">
                     <thead>
-                        <tr className="text-left">
-                            <th className="p-2">ID</th>
-                            <th className="p-2">Preferred Midwife</th>
-                            <th className="p-2">Date</th>
-                            <th className="p-2">Actions</th>
-                            <th className="p-2">Status</th>
+                        <tr className="table-header">
+                            <th className="table-cell">ID</th>
+                            <th className="table-cell">Preferred Midwife</th>
+                            <th className="table-cell">Date</th>
+                            <th className="table-cell">Actions</th>
+                            <th className="table-cell">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-[#fff4f2] shadow-lg">
+                    <tbody className="table-body">
                         {appointments.map((appointment) => (
-                            <tr key={appointment._id} className="text-left border-b">
-                                <td className="p-2">{appointment.appointmentId}</td>
-                                <td className="p-2">{appointment.preferredMidwife || "N/A"}</td>
-                                <td className="p-2">{new Date(appointment.suitableTime).toLocaleString()}</td>
-                                <td className="p-2 flex gap-2">
-                                    <button onClick={() => handleView(appointment)} className="bg-[#F88379] text-white px-3 py-1 rounded">View</button>
-                                    <button onClick={() => handleDelete(appointment._id, appointment.suitableTime)} className="text-red-500 hover:underline">🗑️</button>
+                            <tr key={appointment._id} className="table-row">
+                                <td className="table-cell">{appointment.appointmentId}</td>
+                                <td className="table-cell">{appointment.preferredMidwife || "N/A"}</td>
+                                <td className="table-cell">{new Date(appointment.suitableTime).toLocaleString()}</td>
+                                <td className="actions-cell">
+                                    <button onClick={() => handleView(appointment)} className="view-btn">View</button>
+                                    <button onClick={() => handleDelete(appointment._id, appointment.suitableTime)} className="delete-btn">🗑️</button>
                                     {errorMessage && (
                                         <motion.div
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.8 }}
-                                                className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-opacity-95"
-                                            >
-                                            <div className="bg-white p-4 rounded-lg shadow-lg text-center">
-                                                <p className="text-red-600 font-semibold">{errorMessage}</p>
-                                                <button onClick={() => setErrorMessage("")} className="mt-2 px-4 py-2 bg-red-500 text-white rounded">
+                                            className="error-modal"
+                                        >
+                                            <div className="error-modal-content">
+                                                <p className="error-message">{errorMessage}</p>
+                                                <button onClick={() => setErrorMessage("")} className="error-btn">
                                                     OK
                                                 </button>
                                             </div>
                                         </motion.div>
                                     )}
                                 </td>
-                                <td className="p-2 text-white text-center font-bold">
-                                    <span className={`px-3 py-1 rounded ${
-                                        appointment.status === "Approved" ? "bg-green-500" :
-                                        appointment.status === "Completed" ? "bg-blue-500" : "bg-yellow-500"
+                                <td className="status-cell">
+                                    <span className={`status-badge ${
+                                        appointment.status === "Approved" ? "status-approved" :
+                                        appointment.status === "Completed" ? "status-completed" : "status-pending"
                                     }`}>
                                         {appointment.status}
                                     </span>
@@ -179,68 +182,68 @@ const ManageAppointments = () => {
                 </table>
 
                 {isModalOpen && selectedAppointment && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-6 rounded-lg shadow-lg w-2/3 max-w-4xl">
-                            <h2 className="text-2xl font-semibold mb-6 text-center">Appointment Details</h2>
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <h2 className="modal-title">Appointment Details</h2>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="form-grid">
                                 {/* Full Name */}
-                                <div className="flex flex-col">
-                                    <label htmlFor="fullName" className="font-medium mb-2">Full Name:</label>
+                                <div className="form-group">
+                                    <label htmlFor="fullName" className="form-label">Full Name:</label>
                                     {isEditing ? (
                                         <input
                                             type="text"
                                             name="fullName"
                                             value={selectedAppointment.fullName}
                                             onChange={handleChange}
-                                            className="border p-2 rounded-md"
+                                            className="form-input"
                                             id="fullName"
                                         />
                                     ) : (
                                         <p>{selectedAppointment.fullName}</p>
                                     )}
-                                    {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
+                                    {errors.fullName && <p className="validation-error">{errors.fullName}</p>}
                                 </div>
 
                                 {/* Contact No */}
-                                <div className="flex flex-col">
-                                    <label htmlFor="contactNo" className="font-medium mb-2">Contact No:</label>
+                                <div className="form-group">
+                                    <label htmlFor="contactNo" className="form-label">Contact No:</label>
                                     {isEditing ? (
                                         <input
                                             type="text"
                                             name="contactNo"
                                             value={selectedAppointment.contactNo}
                                             onChange={handleChange}
-                                            className="border p-2 rounded-md"
+                                            className="form-input"
                                             id="contactNo"
                                         />
                                     ) : (
                                         <p>{selectedAppointment.contactNo}</p>
                                     )}
-                                    {errors.contactNo && <p className="text-red-500 text-sm">{errors.contactNo}</p>}
+                                    {errors.contactNo && <p className="validation-error">{errors.contactNo}</p>}
                                 </div>
 
                                 {/* Email */}
-                                <div className="flex flex-col">
-                                    <label htmlFor="emailId" className="font-medium mb-2">Email:</label>
+                                <div className="form-group">
+                                    <label htmlFor="emailId" className="form-label">Email:</label>
                                     {isEditing ? (
                                         <input
                                             type="email"
                                             name="emailId"
                                             value={selectedAppointment.emailId}
                                             onChange={handleChange}
-                                            className="border p-2 rounded-md"
+                                            className="form-input"
                                             id="emailId"
                                         />
                                     ) : (
                                         <p>{selectedAppointment.emailId}</p>
                                     )}
-                                    {errors.emailId && <p className="text-red-500 text-sm">{errors.emailId}</p>}
+                                    {errors.emailId && <p className="validation-error">{errors.emailId}</p>}
                                 </div>
 
                                 {/* Preferred Midwife */}
-                                <div className="flex flex-col">
-                                    <label htmlFor="preferredMidwife" className="font-medium mb-2">Preferred Midwife:</label>
+                                <div className="form-group">
+                                    <label htmlFor="preferredMidwife" className="form-label">Preferred Midwife:</label>
                                     {isEditing ? (
                                         <select
                                         {...register("preferredMidwife", { required: "Midwife selection is required" })}
@@ -248,7 +251,7 @@ const ManageAppointments = () => {
                                         onChange={handleChange}
                                         name="preferredMidwife"
                                         id="preferredMidwife"
-                                        className="border p-2 rounded"
+                                        className="form-select"
                                         >
                                         <option value="">Select Preferred Midwife</option>
                                         {midwives.map((midwife) => (
@@ -263,14 +266,14 @@ const ManageAppointments = () => {
                                 </div>
 
                                 {/* Appointment Type */}
-                                <div className="flex flex-col">
-                                    <label htmlFor="appointmentType" className="font-medium mb-2">Appointment Type:</label>
+                                <div className="form-group">
+                                    <label htmlFor="appointmentType" className="form-label">Appointment Type:</label>
                                     {isEditing ? (
                                         <select
                                             name="appointmentType"
                                             value={selectedAppointment.appointmentType}
                                             onChange={handleChange}
-                                            className="border p-2 rounded-md"
+                                            className="form-select"
                                             id="appointmentType"
                                         >
                                             <option value="">Select Appointment Type</option>
@@ -284,33 +287,32 @@ const ManageAppointments = () => {
                                 </div>
 
                                 {/* Suitable Time */}
-                                <div className="flex flex-col">
-                                    <label htmlFor="suitableTime" className="font-medium mb-2">Date & Time:</label>
+                                <div className="form-group">
+                                    <label htmlFor="suitableTime" className="form-label">Date & Time:</label>
                                     <p>{new Date(selectedAppointment.suitableTime).toLocaleString()}</p>
                                 </div>
                             </div>
 
-                            <div className="mt-6 flex justify-end space-x-4">
+                            <div className="modal-actions">
                                 <button
                                 onClick={() => {
                                     setIsModalOpen(false);
                                     setIsEditing(false);
                                 }}
-                                className="bg-[#F88379] text-white px-4 py-2 rounded-md"
+                                className="close-btn"
                                 >
                                 Close
                                 </button>
 
                                 {isEditing ? (
-                                    <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded-md">Save</button>
+                                    <button onClick={handleSave} className="save-btn">Save</button>
                                 ) : (
-                                    <button onClick={handleEdit} className="bg-yellow-500 text-white px-4 py-2 rounded-md">Edit</button>
+                                    <button onClick={handleEdit} className="edit-btn">Edit</button>
                                 )}
                             </div>
                         </div>
                     </div>
                 )}
-
             </div>
         </div>
     );

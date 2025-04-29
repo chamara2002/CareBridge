@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
+import "./CreateAppointment.css";
 
 const AppointmentForm = () => {
     const { register, handleSubmit, setValue, reset, formState: { errors, isValid } } = useForm({ mode: "onChange" });
@@ -89,74 +90,82 @@ const AppointmentForm = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="max-w-3xl w-full p-8 bg-[#f0e8e8] shadow-lg rounded-lg min-h-[500px]">
-                <h1 className="text-4xl font-semibold mb-6 text-center">Book an Appointment</h1>
-                <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
+        <div className="appointment-container">
+            <div className="appointment-form-container">
+                <h1 className="form-title">Book an Appointment</h1>
+                <form onSubmit={handleSubmit(onSubmit)} className="form-container">
                     {step === 1 && (
                         <>
-                            <h2 className="text-2xl font-semibold mb-4">Personal Details</h2>
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <label className="text-lg">Full Name:</label>
-                                <input {...register("fullName", { required: true })} placeholder="Full Name" className="border p-2 rounded col-span-2" />
-                                {errors.fullName && <span className="text-red-500 col-span-3">Full Name is required</span>}
+                            <h2 className="section-title">Personal Details</h2>
+                            <div className="form-group">
+                                <label className="form-label">Full Name:</label>
+                                <input {...register("fullName", { required: true })} placeholder="Full Name" className="form-input" />
+                                {errors.fullName && <span className="error-message">Full Name is required</span>}
                             </div>
 
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <label className="text-lg">Contact No:</label>
+                            <div className="form-group">
+                                <label className="form-label">Contact No:</label>
                                 <input {...register("contactNo", { 
                                     required: "Contact Number is required", 
                                     pattern: { 
-                                        
                                         value: /^0(?:7[01245678]|11|21|23|24|25|26|27|31|32|33|34|35|36|37|38|41|45|47|51|52|54|55|56|57|58|63|65|66|67)[0-9]{7}$/,
                                         message: "Invalid phone number" 
                                     }
-                                })} placeholder="07X XXXXXXX" className="border p-2 rounded col-span-2" />
-                                {errors.contactNo && <span className="text-red-500 col-span-3">{errors.contactNo.message}</span>}
+                                })} placeholder="07X XXXXXXX" className="form-input" />
+                                {errors.contactNo && <span className="error-message">{errors.contactNo.message}</span>}
                             </div>
 
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <label className="text-lg">NIC:</label>
+                            <div className="form-group">
+                                <label className="form-label">NIC:</label>
                                 <input {...register("nic", {
                                     required: "NIC is required",
                                     pattern: {
                                         value: /^(?:\d{9}[vVxX]|\d{12})$/,
                                         message: "Invalid Sri Lankan NIC"
                                     }
-                                })} placeholder="NIC" className="border p-2 rounded col-span-2" />
-                                {errors.nic && <span className="text-red-500 col-span-3">{errors.nic.message}</span>}
+                                })} placeholder="NIC" className="form-input" />
+                                {errors.nic && <span className="error-message">{errors.nic.message}</span>}
                             </div>
 
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <label className="text-lg">Email ID:</label>
-                                <input {...register("emailId", { required: "Email is required", pattern: { value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/, message: "Invalid email address" } })} type="email" placeholder="Email ID" className="border p-2 rounded col-span-2" />
-                                {errors.emailId && <span className="text-red-500 col-span-3">{errors.emailId.message}</span>}
+                            <div className="form-group">
+                                <label className="form-label">Email ID:</label>
+                                <input {...register("emailId", { 
+                                    required: "Email is required", 
+                                    pattern: { 
+                                        value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/, 
+                                        message: "Invalid email address" 
+                                    } 
+                                })} type="email" placeholder="Email ID" className="form-input" />
+                                {errors.emailId && <span className="error-message">{errors.emailId.message}</span>}
                             </div>
 
-                            <div className="grid grid-cols-3 items-center gap-4">
-                                <label className="text-lg">Address:</label>
-                                <input {...register("address", { required: "Address is required" })} placeholder="Address" className="border p-2 rounded col-span-2" />
-                                {errors.address && <span className="text-red-500 col-span-3">{errors.address.message}</span>}
+                            <div className="form-group">
+                                <label className="form-label">Address:</label>
+                                <input {...register("address", { required: "Address is required" })} placeholder="Address" className="form-input" />
+                                {errors.address && <span className="error-message">{errors.address.message}</span>}
                             </div>
 
-                            <div className="flex justify-between mt-4">
-                                <a href="/manageappointment"><button type="button" className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-600">Cancel</button></a>
-                                <button type="button" onClick={() => setStep(2)} disabled={!isValid} className={`py-2 px-4 rounded ${isValid ? "bg-[#F88379] hover:bg-[#ea9890] text-white" : "bg-gray-300 text-gray-600 cursor-not-allowed"}`}>Next</button>
+                            <div className="form-actions">
+                                <a href="/manageappointment"><button type="button" className="btn-cancel">Cancel</button></a>
+                                <button 
+                                    type="button" 
+                                    onClick={() => setStep(2)} 
+                                    disabled={!isValid} 
+                                    className={`btn-next ${isValid ? "btn-next-active" : "btn-next-disabled"}`}
+                                >
+                                    Next
+                                </button>
                             </div>
                         </>
                     )}
 
                     {step === 2 && (
                         <>
-                            <h2 className="text-2xl font-semibold">Appointment Details</h2>
-                            <div className="grid gap-3">
-                                {/* <div className="flex flex-col">
+                            <h2 className="section-title">Appointment Details</h2>
+                            <div className="form-grid">
+                                <div className="appointment-form-group">
                                     <label>Preferred Midwife:</label>
-                                    <input {...register("preferredMidwife")} placeholder="Preferred Midwife" className="border p-2 rounded" />
-                                </div> */}
-                                <div className="flex flex-col">
-                                    <label>Preferred Midwife:</label>
-                                    <select {...register("preferredMidwife", { required: "Midwife selection is required" })} className="border p-2 rounded">
+                                    <select {...register("preferredMidwife", { required: "Midwife selection is required" })} className="appointment-select">
                                         <option value="">Select a Midwife</option>
                                         {midwives.map((midwife) => (
                                             <option key={midwife._id} value={midwife.name}>
@@ -164,50 +173,50 @@ const AppointmentForm = () => {
                                             </option>
                                         ))}
                                     </select>
-                                    {errors.preferredMidwife && <span className="text-red-500">{errors.preferredMidwife.message}</span>}
+                                    {errors.preferredMidwife && <span className="error-message">{errors.preferredMidwife.message}</span>}
                                 </div>
 
-                                <div className="flex flex-col">
+                                <div className="appointment-form-group">
                                     <label>Appointment Type:</label>
-                                    <select {...register("appointmentType", { required: "Appointment Type is required" })} className="border p-2 rounded">
+                                    <select {...register("appointmentType", { required: "Appointment Type is required" })} className="appointment-select">
                                         <option value="">Select Appointment Type</option>
                                         <option value="Prenatal Checkup">Prenatal Checkup</option>
                                         <option value="Postpartum Visit">Postpartum Visit</option>
                                         <option value="General Consultation">General Consultation</option>
                                     </select>
-                                    {errors.appointmentType && <span className="text-red-500">{errors.appointmentType.message}</span>}
+                                    {errors.appointmentType && <span className="error-message">{errors.appointmentType.message}</span>}
                                 </div>
 
-                                <div className="flex flex-col">
+                                <div className="appointment-form-group">
                                     <label>Suitable Time:</label>
                                     <input
-                                    {...register("suitableTime", { required: "Suitable Time is required" })}
-                                    type="datetime-local"
-                                    className="border p-2 rounded"
-                                    min={new Date().toISOString().slice(0, 16)}
-                                    onChange={handleTimeChange}
-                                />
+                                        {...register("suitableTime", { required: "Suitable Time is required" })}
+                                        type="datetime-local"
+                                        className="appointment-select"
+                                        min={new Date().toISOString().slice(0, 16)}
+                                        onChange={handleTimeChange}
+                                    />
                                     {errorMessage && (
                                         <motion.div
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.8 }}
-                                            className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+                                            className="modal-overlay"
                                         >
-                                            <div className="bg-white p-4 rounded-lg shadow-lg text-center">
-                                                <p className="text-red-600 font-semibold">{errorMessage}</p>
-                                                <button onClick={() => setErrorMessage("")} className="mt-2 px-4 py-2 bg-red-500 text-white rounded">
+                                            <div className="modal-container">
+                                                <p className="modal-message">{errorMessage}</p>
+                                                <button onClick={() => setErrorMessage("")} className="modal-button">
                                                     OK
                                                 </button>
                                             </div>
                                         </motion.div>
                                     )}
-                                    {errors.suitableTime && <span className="text-red-500">{errors.suitableTime.message}</span>}
+                                    {errors.suitableTime && <span className="error-message">{errors.suitableTime.message}</span>}
                                 </div>
                             </div>
-                            <div className="flex justify-between mt-4">
-                                <button type="button" onClick={() => setStep(1)} className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-600">Previous</button>
-                                <button type="submit" className="bg-[#F88379] text-white py-2 px-4 rounded hover:bg-[#ea9890]">Submit</button>
+                            <div className="form-actions">
+                                <button type="button" onClick={() => setStep(1)} className="btn-previous">Previous</button>
+                                <button type="submit" className="btn-submit">Submit</button>
                             </div>
                         </>
                     )}

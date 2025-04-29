@@ -1,0 +1,250 @@
+.appointments-container {
+  min-height: 100vh;
+}
+
+.appointments-wrapper {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.appointments-title {
+  font-size: 2.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.create-btn-container {
+  width: 100%;
+  text-align: right;
+}
+
+.create-appointment-btn {
+  background-color: #F88379;
+  color: white;
+  text-align: right;
+  padding: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+.table-header {
+  text-align: left;
+}
+
+.table-header th {
+  padding: 0.5rem;
+}
+
+.table-body {
+  background-color: #fff4f2;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.table-row {
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.table-cell {
+  padding: 0.5rem;
+}
+
+.actions-cell {
+  padding: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-btn {
+  background-color: #F88379;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-btn {
+  color: #ef4444;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  text-decoration: underline;
+}
+
+.error-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.95);
+}
+
+.error-modal-content {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.error-message {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.error-btn {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  color: white;
+  text-align: center;
+  font-weight: 700;
+}
+
+.status-approved {
+  background-color: #10b981;
+}
+
+.status-completed {
+  background-color: #3b82f6;
+}
+
+.status-pending {
+  background-color: #eab308;
+}
+
+.status-cell {
+  padding: 0.5rem;
+  color: white;
+  text-align: center;
+  font-weight: 700;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  width: 66.666667%;
+  max-width: 56rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.form-select {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.validation-error {
+  color: #ef4444;
+  font-size: 0.875rem;
+}
+
+.modal-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.close-btn {
+  background-color: #F88379;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+}
+
+.save-btn {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #eab308;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+}
