@@ -23,7 +23,7 @@ const ManageAppointments = () => {
     useEffect(() => {
         const fetchMidwives = async () => {
             try {
-                const response = await axios.get("http://localhost:5006/api/appointments/midwives");
+                const response = await axios.get("http://localhost:5000/api/appointments/midwives");
                 setMidwives(response.data);
             } catch (error) {
                 console.error("Error fetching midwives:", error);
@@ -37,7 +37,7 @@ const ManageAppointments = () => {
         const decoded = jwtDecode(token);
         const id = decoded.userId;
         try {
-            const response = await axios.get(`http://localhost:5006/api/appointments/getbyid/${id}`);
+            const response = await axios.get(`http://localhost:5000/api/appointments/getbyid/${id}`);
             setAppointments(response.data);
         } catch (error) {
             console.error("Error fetching appointments:", error);
@@ -61,7 +61,7 @@ const ManageAppointments = () => {
 
         if (window.confirm("Are you sure you want to delete this appointment?")) {
             try {
-                await axios.delete(`http://localhost:5006/api/appointments/delete/${id}`);
+                await axios.delete(`http://localhost:5000/api/appointments/delete/${id}`);
                 fetchAppointments();
             } catch (error) {
                 console.error("Error deleting appointment:", error);
@@ -81,7 +81,7 @@ const ManageAppointments = () => {
         }
 
         try {
-            await axios.put(`http://localhost:5006/api/appointments/update/${selectedAppointment._id}`, selectedAppointment);
+            await axios.put(`http://localhost:5000/api/appointments/update/${selectedAppointment._id}`, selectedAppointment);
             fetchAppointments(); 
             setIsEditing(false); 
         } catch (error) {
