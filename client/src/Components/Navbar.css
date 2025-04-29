@@ -1,0 +1,94 @@
+.navbar {
+  background-color: #F88379; /* Dark Pink */
+  padding: 15px;
+  color: white;
+  position: relative; /* Ensure it controls child elements */
+  z-index: 1000;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: auto;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  margin-left: 20px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+}
+
+/* logoutButton.css */
+.btn-logout {
+  background-color: #F88379; /* Dark Pink - Primary */
+  color: rgb(184, 30, 30); /* Text color */
+  border: none; /* Remove default border */
+  padding: 2.5px 20px; /* Button padding */
+  font-size: 18px; /* Font size */
+  cursor: pointer; 
+}
+
+.btn-logout:hover {
+  color: #FFB6A3; /* Coral - Secondary on hover */
+}
+
+.btn-logout:active {
+  color: #FFB6A3; /* Slight shrink on click */
+}
+
+
+.nav-links a:hover {
+  color: #FFB6A3; /* Light Pink */
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: #F88379; /* Dark Pink */
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    z-index: 1002;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+    position: relative;
+    z-index: 1100;
+  }
+}
