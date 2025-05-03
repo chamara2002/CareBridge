@@ -20,7 +20,10 @@ import Motherreport from './Pages/NewBorn/NewBornReport/Motherreport';
 import UpdateMother from './Pages/NewBorn/Updatenewborn/UpdateMother';
 import ViewMother from './Pages/NewBorn/viewSingleBron/ViewMother';
 import ViewAllMother from './Pages/NewBorn/viewAllNewborn/ViewAllMother';
- */}
+
+*/}
+
+ 
 
 const App = () => {
   const [user, setUser] = useState(null); // Track user login state
@@ -43,9 +46,9 @@ const App = () => {
         <Route path="/Contact" element={<Contact />} />
         <Route path="/AIMoodTracker" element={<AIMoodTracker />} /> 
 
-
-
-           {/**   <Route path="/rr" element={<HomePage />} />
+L{/**
+ * 
+ *   <Route path="/rr" element={<HomePage />} />
       <Route path="/mother-home" element={<MotherHome />} />
       <Route path="/AddMother" element={<AddMother />} />
       <Route path="/ViewAllMother" element={<ViewAllMother />} />
@@ -53,6 +56,9 @@ const App = () => {
       <Route path="/view-single/:motherId" element={<ViewMother/>} />
       <Route path="/report-generation" element={<Motherreport/>} />
  */}
+
+         
+
       
 
 
