@@ -1,0 +1,735 @@
+/* AI Mood Tracker Styles */
+.ai-mood-tracker {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+    font-family: 'Open Sans', 'Segoe UI', sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  
+  header h1 {
+    color: #3a6ac2;
+    font-size: 2.8rem;
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  header h1::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #4a89dc, #5d9cec);
+    border-radius: 2px;
+  }
+  
+  .tagline {
+    color: #7f8c8d;
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin-top: 15px;
+  }
+  
+  /* Sections */
+  .tracker-section {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .tracker-section:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+  }
+  
+  .tracker-section h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  
+  /* Webcam */
+  .webcam-container {
+    position: relative;
+    margin-bottom: 20px;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #e0e0e0;
+  }
+  
+  .webcam-video {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .webcam-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  /* Buttons */
+  .action-btn {
+    background: #4a89dc;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 15px 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(74, 137, 220, 0.2);
+    min-width: 160px;
+  }
+  
+  .action-btn:hover {
+    background: #3a70c2;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(74, 137, 220, 0.3);
+  }
+  
+  .action-btn:active {
+    transform: translateY(1px);
+  }
+  
+  .action-btn:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .primary-btn {
+    background: #3a6ac2;
+  }
+  
+  .capture-btn {
+    background: #4a89dc;
+  }
+  
+  .analyze-btn {
+    background: #5d9cec;
+  }
+  
+  .stop-btn {
+    background: #e74c3c;
+  }
+  
+  .stop-btn:hover {
+    background: #c0392b;
+  }
+  
+  .download-btn {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
+  }
+  
+  .download-btn:hover {
+    background: linear-gradient(135deg, #27ae60, #219653);
+    box-shadow: 0 6px 10px rgba(46, 204, 113, 0.3);
+  }
+  
+  /* Mood Buttons */
+  .mood-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .mood-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .mood-btn.happy {
+    background: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+    border: 1px solid #27ae60;
+  }
+  
+  .mood-btn.happy:hover {
+    background: rgba(46, 204, 113, 0.25);
+  }
+  
+  .mood-btn.neutral {
+    background: rgba(241, 196, 15, 0.15);
+    color: #f39c12;
+    border: 1px solid #f39c12;
+  }
+  
+  .mood-btn.neutral:hover {
+    background: rgba(241, 196, 15, 0.25);
+  }
+  
+  .mood-btn.sad {
+    background: rgba(231, 76, 60, 0.15);
+    color: #c0392b;
+    border: 1px solid #c0392b;
+  }
+  
+  .mood-btn.sad:hover {
+    background: rgba(231, 76, 60, 0.25);
+  }
+  
+  .mood-emoji {
+    font-size: 1.2rem;
+  }
+  
+  /* Icons */
+  .icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  
+  .icon.camera::before {
+    content: "📷";
+  }
+  
+  .icon.analyze::before {
+    content: "🔍";
+  }
+  
+  .icon.download::before {
+    content: "📥";
+  }
+  
+  .icon.stop::before {
+    content: "⏹️";
+  }
+  
+  /* Analysis Panel */
+  .analysis-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 15px 0;
+  }
+  
+  .preview-image {
+    max-width: 300px;
+    border-radius: 10px;
+    margin: 10px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border: 4px solid white;
+  }
+  
+  .analysis-options {
+    width: 100%;
+    max-width: 500px;
+    margin-top: 15px;
+  }
+  
+  .manual-mood-selection {
+    margin-top: 20px;
+    text-align: center;
+    padding-top: 15px;
+    border-top: 1px dashed #e0e0e0;
+  }
+  
+  .manual-mood-selection p {
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #7f8c8d;
+  }
+  
+  /* Mood Results */
+  .mood-result, .text-result {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 30px;
+    margin-top: 15px;
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .mood-result.happy, 
+  .text-result.positive {
+    background: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+    border-left: 4px solid #27ae60;
+  }
+  
+  .mood-result.sad, 
+  .text-result.negative {
+    background: rgba(231, 76, 60, 0.15);
+    color: #c0392b;
+    border-left: 4px solid #c0392b;
+  }
+  
+  .mood-result.neutral, 
+  .text-result.neutral {
+    background: rgba(241, 196, 15, 0.15);
+    color: #f39c12;
+    border-left: 4px solid #f39c12;
+  }
+  
+  /* Text Input */
+  .text-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+  }
+  
+  .text-input:focus {
+    border-color: #4a89dc;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 137, 220, 0.1);
+  }
+  
+  /* Wellness Metrics */
+  .wellness-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+  }
+  
+  .metric/* AI Mood Tracker Styles */
+  .ai-mood-tracker {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+    font-family: 'Open Sans', 'Segoe UI', sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  
+  header h1 {
+    color: #3a6ac2;
+    font-size: 2.8rem;
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    position: relative;
+    display: inline-block;
+  }
+  
+  header h1::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #4a89dc, #5d9cec);
+    border-radius: 2px;
+  }
+  
+  .tagline {
+    color: #7f8c8d;
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin-top: 15px;
+  }
+  
+  /* Sections */
+  .tracker-section {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .tracker-section:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+  }
+  
+  .tracker-section h2 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  
+  /* Webcam */
+  .webcam-container {
+    position: relative;
+    margin-bottom: 20px;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #e0e0e0;
+  }
+  
+  .webcam-video {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Buttons */
+  .action-btn {
+    background: #4a89dc;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 15px 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(74, 137, 220, 0.2);
+    min-width: 160px;
+  }
+  
+  .action-btn:hover {
+    background: #3a70c2;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(74, 137, 220, 0.3);
+  }
+  
+  .action-btn:active {
+    transform: translateY(1px);
+  }
+  
+  .primary-btn {
+    background: #3a6ac2;
+  }
+  
+  .capture-btn {
+    background: #4a89dc;
+  }
+  
+  .analyze-btn {
+    background: #5d9cec;
+  }
+  
+  .download-btn {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
+  }
+  
+  .download-btn:hover {
+    background: linear-gradient(135deg, #27ae60, #219653);
+    box-shadow: 0 6px 10px rgba(46, 204, 113, 0.3);
+  }
+  
+  /* Icons */
+  .icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  
+  .icon.camera::before {
+    content: "📷";
+  }
+  
+  .icon.analyze::before {
+    content: "🔍";
+  }
+  
+  .icon.download::before {
+    content: "📥";
+  }
+  
+  .icon.mood-happy::before,
+  .icon.mood-positive::before {
+    content: "😊";
+  }
+  
+  .icon.mood-sad::before,
+  .icon.mood-negative::before {
+    content: "😔";
+  }
+  
+  .icon.mood-neutral::before {
+    content: "😐";
+  }
+  
+  /* Analysis Panel */
+  .analysis-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 15px 0;
+  }
+  
+  .preview-image {
+    max-width: 300px;
+    border-radius: 10px;
+    margin: 10px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border: 4px solid white;
+  }
+  
+  /* Mood Results */
+  .mood-result, .text-result {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 30px;
+    margin-top: 15px;
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .mood-result.happy, 
+  .text-result.positive {
+    background: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+    border-left: 4px solid #27ae60;
+  }
+  
+  .mood-result.sad, 
+  .text-result.negative {
+    background: rgba(231, 76, 60, 0.15);
+    color: #c0392b;
+    border-left: 4px solid #c0392b;
+  }
+  
+  .mood-result.neutral, 
+  .text-result.neutral {
+    background: rgba(241, 196, 15, 0.15);
+    color: #f39c12;
+    border-left: 4px solid #f39c12;
+  }
+  
+  /* Text Input */
+  .text-input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+  }
+  
+  .text-input:focus {
+    border-color: #4a89dc;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 137, 220, 0.1);
+  }
+  
+  /* Wellness Metrics */
+  .wellness-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+  }
+  
+  .metric {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .metric label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  .slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #4a89dc, #5d9cec);
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #4a89dc;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .slider:focus {
+    outline: none;
+  }
+  
+  /* History Section */
+  .mood-history {
+    margin-top: 25px;
+  }
+  
+  .mood-history h3 {
+    color: #2c3e50;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+  }
+  
+  .log-list {
+    list-style: none;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 10px;
+  }
+  
+  .log-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+  }
+  
+  .log-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .log-item:last-child {
+    border-bottom: none;
+  }
+  
+  .log-date {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+  }
+  
+  .log-mood {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  
+  .log-mood.happy,
+  .log-mood.positive {
+    background: #a0d468;
+    color: white;
+  }
+  
+  .log-mood.sad,
+  .log-mood.negative {
+    background: #ed5565;
+    color: white;
+  }
+  
+  .log-mood.neutral {
+    background: #ffce54;
+    color: white;
+  }
+  
+  .empty-log {
+    text-align: center;
+    color: #95a5a6;
+    padding: 20px 0;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .ai-mood-tracker {
+      padding: 20px;
+    }
+    
+    header h1 {
+      font-size: 2.2rem;
+    }
+    
+    .tracker-section {
+      padding: 20px;
+    }
+    
+    .action-btn {
+      width: 100%;
+      margin: 10px 0;
+    }
+    
+    .wellness-metrics {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+  }

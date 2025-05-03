@@ -41,10 +41,10 @@ const Navbar = () => {
             <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/services">Services</Link>
+            <Link to="/Service">Services</Link>
           </li>
           <li>
-            <Link to="/contact">Contact</Link>
+            <Link to="/Contact">Contact</Link>
           </li>
 
           {/* Conditionally show Dashboard and Logout if logged in */}
@@ -54,6 +54,11 @@ const Navbar = () => {
               {user.role === "mother" && (
                 <li>
                   <Link to="/mother-dashboard">Mother Dashboard</Link>
+                </li>
+              )}
+              {user.role === "mother" && (
+                <li>
+                  <Link to="/AIMoodTracker">Mood Tracker</Link>
                 </li>
               )}
               {user.role === "midwife" && (

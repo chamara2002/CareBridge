@@ -9,6 +9,9 @@ import Footer from './Components/Footer';
 import SignUp from './Pages/SignUp';
 import SignIn from './Pages/SignIn';
 import MidVac from './Pages/MidVac';
+import Service from './Pages/Service';
+import Contact from './Pages/Contact';
+import AIMoodTracker from './Pages/AIMoodTracker';
 
 const App = () => {
   const [user, setUser] = useState(null); // Track user login state
@@ -27,6 +30,9 @@ const App = () => {
         <Route path="/MidMothers" element={<MothersManagement />} />
         <Route path="/MidNewborns" element={<NewbornManagement />} />
         <Route path="/MidVac" element={<MidVac />} />
+        <Route path="/Service" element={<Service />} />
+        <Route path="/Contact" element={<Contact />} />
+        <Route path="/AIMoodTracker" element={<AIMoodTracker />} /> 
       </Routes>
       <Footer />
     </Router>
