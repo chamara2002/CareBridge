@@ -13,6 +13,15 @@ import Service from './Pages/Service';
 import Contact from './Pages/Contact';
 import AIMoodTracker from './Pages/AIMoodTracker';
 
+{/**
+import AddMother from './Pages/NewBorn/NewBoarnForm/AddMother';
+import MotherHome from './Pages/NewBorn/NewbornHome/MotherHome';
+import Motherreport from './Pages/NewBorn/NewBornReport/Motherreport';
+import UpdateMother from './Pages/NewBorn/Updatenewborn/UpdateMother';
+import ViewMother from './Pages/NewBorn/viewSingleBron/ViewMother';
+import ViewAllMother from './Pages/NewBorn/viewAllNewborn/ViewAllMother';
+ */}
+
 const App = () => {
   const [user, setUser] = useState(null); // Track user login state
 
@@ -33,7 +42,31 @@ const App = () => {
         <Route path="/Service" element={<Service />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/AIMoodTracker" element={<AIMoodTracker />} /> 
+
+
+
+           {/**   <Route path="/rr" element={<HomePage />} />
+      <Route path="/mother-home" element={<MotherHome />} />
+      <Route path="/AddMother" element={<AddMother />} />
+      <Route path="/ViewAllMother" element={<ViewAllMother />} />
+      <Route path="/update/:motherId" element={<UpdateMother />} />
+      <Route path="/view-single/:motherId" element={<ViewMother/>} />
+      <Route path="/report-generation" element={<Motherreport/>} />
+ */}
+      
+
+
+
+
+
+
+
       </Routes>
+
+
+      {/**
+       * 
+       */}
       <Footer />
     </Router>
   );

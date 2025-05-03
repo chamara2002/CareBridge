@@ -1,0 +1,11 @@
+.mother-home-h1{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: black;
+    text-align: center;
+    align-items: center;
+}
+.mother-home{
+    background-color: rgb(215, 215, 215);
+}

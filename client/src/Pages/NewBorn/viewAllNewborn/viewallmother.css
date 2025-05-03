@@ -1,0 +1,97 @@
+.view-mother-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .mother-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .mother-table th,
+  .mother-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .mother-table th {
+    background-color: #003c12;
+    color: white;
+  }
+  
+  .mother-table td {
+    background-color: #f9f9f9;
+  }
+  
+  .mother-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .mother-table tr:hover {
+    background-color: #ddd;
+  }
+  
+  .action-icons button {
+    background: none;
+    border: none;
+    margin-right: 10px;
+    cursor: pointer;
+    color: #4CAF50;
+  }
+  
+  .action-icons button:hover {
+    color: #555;
+  }
+  
+  .action-icons button:active {
+    color: #222;
+  }
+  
+
+  .h1-mother-register{
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+  }
+
+  .search-bar {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 20px; /* Centers the search bar */
+    padding: 12px 20px;
+    border-radius: 30px; /* Rounded corners */
+    border: 2px solid #007bff; /* Blue border */
+    font-size: 16px;
+    background-color: #f8f9fa; /* Light background */
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .search-bar:focus {
+    outline: none; /* Removes the default focus outline */
+    border-color: #0056b3; /* Darker blue border on focus */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Blue shadow on focus */
+  }
+  
+  .search-bar::placeholder {
+    color: #aaa; /* Light gray placeholder text */
+    font-style: italic;
+  }
+  .title-mother-reg{
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 800;
+    font-size: 30px;
+  }
+
+  .view-all-mothers {
+    margin-left: 150px;
+    margin-right: 150px;
+    
+  }
+  .view-all-newbron{
+    background: linear-gradient(to bottom, #ffffff, #752121);
+
+  }
