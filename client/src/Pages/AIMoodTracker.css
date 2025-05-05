@@ -615,14 +615,14 @@
     color: #2c3e50;
   }
   
-  .slider {
+  .aislider {
     width: 100%;
     height: 8px;
     border-radius: 5px;
     background: linear-gradient(to right, #4a89dc, #5d9cec);
   }
   
-  .slider::-webkit-slider-thumb {
+  .aislider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 18px;
     height: 18px;
@@ -633,7 +633,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
   
-  .slider:focus {
+  .aislider:focus {
     outline: none;
   }
   
