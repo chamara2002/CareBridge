@@ -54,7 +54,6 @@
   color: #FFB6A3; /* Slight shrink on click */
 }
 
-
 .nav-links a:hover {
   color: #FFB6A3; /* Light Pink */
 }
@@ -66,6 +65,71 @@
   border: none;
   color: white;
   cursor: pointer;
+}
+
+.profile-menu-container {
+  position: relative;
+  margin-left: 15px;
+}
+
+.profile-menu-trigger {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  transition: all 0.2s ease;
+}
+
+.profile-menu-trigger:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 8px 0;
+  min-width: 180px;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.profile-dropdown a,
+.profile-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  text-align: left;
+  border: none;
+  background: none;
+  color: #333;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.profile-dropdown a:hover,
+.profile-dropdown button:hover {
+  color: #F88379;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 768px) {
@@ -90,5 +154,25 @@
     display: block;
     position: relative;
     z-index: 1100;
+  }
+
+  .profile-dropdown {
+    position: static;
+    box-shadow: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+  }
+
+  .profile-dropdown a,
+  .profile-dropdown button {
+    color: white;
+    padding: 12px 20px;
+  }
+
+  .profile-dropdown a:hover,
+  .profile-dropdown button:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: white;
   }
 }
