@@ -128,57 +128,94 @@ const AIMoodTracker = () => {
         img.onload = resolve;
       });
 
-      const predictions = await model.estimateFaces(img);
+      // Create a temporary canvas for processing
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = img.width;
+      tempCanvas.height = img.height;
+      const ctx = tempCanvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      // Get predictions from the model
+      const predictions = await model.estimateFaces(tempCanvas);
       
       if (predictions.length > 0) {
-        // Use a simplified algorithm since facemesh annotations can be complex
         const face = predictions[0];
         
-        // Try to access facial features
-        try {
-          // These are approximations and may need adjustment
-          const mouthOpenness = face.annotations && 
-                              face.annotations.lipsUpperInner && 
-                              face.annotations.lipsLowerInner ? 
-                              Math.abs(face.annotations.lipsUpperInner[5][1] - 
-                                    face.annotations.lipsLowerInner[5][1]) : 0;
-                                    
-          const eyebrowHeight = face.annotations && 
-                              face.annotations.leftEyebrowUpper ? 
-                              face.annotations.leftEyebrowUpper[3][1] : 0;
-          
-          // Simple mood determination algorithm
-          let detectedMood;
-          if (mouthOpenness > 10) {
-            detectedMood = 'happy';
-          } else if (eyebrowHeight < 50) {
-            detectedMood = 'sad';
-          } else {
-            detectedMood = 'neutral';
-          }
-          
-          setMood(detectedMood);
-          
-          // Save to logs
-          const newLog = {
-            date: new Date().toLocaleString(),
-            type: 'facial',
-            mood: detectedMood,
-            image: capturedImage
-          };
-          
-          setLogs(prevLogs => [...prevLogs, newLog]);
-        } catch (error) {
-          console.error("Error analyzing facial features:", error);
-          alert("Could not analyze facial features. Please try a different image or better lighting.");
+        // Calculate facial features
+        const landmarks = face.scaledMesh;
+        
+        // Get mouth points
+        const upperLip = landmarks[13];
+        const lowerLip = landmarks[14];
+        const mouthOpenness = Math.abs(upperLip[1] - lowerLip[1]);
+        
+        // Get eye points for detecting squinting
+        const leftEyeTop = landmarks[159];
+        const leftEyeBottom = landmarks[145];
+        const rightEyeTop = landmarks[386];
+        const rightEyeBottom = landmarks[374];
+        
+        const eyeOpenness = (
+          Math.abs(leftEyeTop[1] - leftEyeBottom[1]) +
+          Math.abs(rightEyeTop[1] - rightEyeBottom[1])
+        ) / 2;
+        
+        // Improved mood detection algorithm
+        let detectedMood;
+        if (mouthOpenness > 15 && eyeOpenness > 5) {
+          detectedMood = 'happy';
+        } else if (mouthOpenness < 5 && eyeOpenness < 3) {
+          detectedMood = 'sad';
+        } else {
+          detectedMood = 'neutral';
         }
+        
+        setMood(detectedMood);
+        
+        // Use mood suggestions
+        const suggestions = generateMoodSuggestions(detectedMood);
+        
+        // Save to logs with suggestions
+        const newLog = {
+          date: new Date().toLocaleString(),
+          type: 'facial',
+          mood: detectedMood,
+          image: capturedImage,
+          suggestions: suggestions
+        };
+        
+        setLogs(prevLogs => [...prevLogs, newLog]);
+        
       } else {
         alert("No face detected in the image. Please try again with a clearer image.");
       }
     } catch (error) {
       console.error("Error analyzing face:", error);
-      alert("Error analyzing face. Please try again.");
+      alert("Error analyzing face. Please try again with better lighting and face clearly visible.");
     }
+  };
+
+  // Add this function after the analyzeFace function
+  const generateMoodSuggestions = (detectedMood) => {
+    const suggestions = {
+      happy: [
+        "Your positive expression shows you're having a good day!",
+        "Keep maintaining this cheerful spirit.",
+        "It's great to see you smiling!"
+      ],
+      sad: [
+        "I notice you might be feeling down today.",
+        "Would you like to talk about what's bothering you?",
+        "Remember it's okay to not be okay sometimes."
+      ],
+      neutral: [
+        "Your expression seems neutral today.",
+        "How are you really feeling inside?",
+        "Would you like to share your thoughts?"
+      ]
+    };
+
+    return suggestions[detectedMood] || [];
   };
 
   // Manual Mood Selection
@@ -494,7 +531,7 @@ const AIMoodTracker = () => {
               name="sleep"
               value={wellness.sleep}
               onChange={handleWellnessChange}
-              className="slider"
+              className="aislider"
             />
           </div>
           
@@ -507,7 +544,7 @@ const AIMoodTracker = () => {
               name="nutrition"
               value={wellness.nutrition}
               onChange={handleWellnessChange}
-              className="slider"
+              className="aislider"
             />
           </div>
           
@@ -520,7 +557,7 @@ const AIMoodTracker = () => {
               name="exercise"
               value={wellness.exercise}
               onChange={handleWellnessChange}
-              className="slider"
+              className="aislider"
             />
           </div>
           
@@ -533,7 +570,7 @@ const AIMoodTracker = () => {
               name="stress"
               value={wellness.stress}
               onChange={handleWellnessChange}
-              className="slider"
+              className="aislider"
             />
           </div>
         </div>
@@ -541,31 +578,10 @@ const AIMoodTracker = () => {
 
       {/* Reports */}
       <section className="tracker-section">
-        <h2>Reports & History</h2>
+        <h2>Reports</h2>
         <button onClick={generateReport} className="action-btn download-btn">
           <span className="icon download"></span> Download PDF Report
         </button>
-        
-        <div className="mood-history">
-          <h3>Mood Log</h3>
-          {logs.length > 0 ? (
-            <ul className="log-list">
-              {logs.map((log, index) => (
-                <li key={index} className="log-item">
-                  <span className="log-date">{log.date}</span>
-                  <span className="log-type">
-                    {log.type === 'text' ? 'Text' : log.type === 'facial' ? 'AI' : 'Manual'}
-                  </span>
-                  <span className={`log-mood ${log.mood}`}>
-                    {log.mood.charAt(0).toUpperCase() + log.mood.slice(1)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="empty-log">No mood logs yet</p>
-          )}
-        </div>
       </section>
     </div>
   );
