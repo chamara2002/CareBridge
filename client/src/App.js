@@ -16,6 +16,7 @@ import Service from './Pages/Service';
 import Contact from './Pages/Contact';
 import AIMoodTracker from './Pages/AIMoodTracker';
 import MotherDashboard from './Pages/Mother/MotherDashboard'; 
+import UserProfile from './Pages/UserProfile/UserProfile';
 
 const App = () => {
   const [user, setUser] = useState(null); // Track user login state
@@ -40,7 +41,8 @@ const App = () => {
         <Route path="/Service" element={<Service />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/AIMoodTracker" element={<AIMoodTracker />} /> 
-        <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />   
+        <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Routes>
       <Footer />
     </Router>
