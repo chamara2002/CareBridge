@@ -15,6 +15,8 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));  
 app.use('/api/midnewborns', require('./routes/midnewbornsRoutes'));  
 app.use('/api/midvac', require('./routes/midvacRoutes')); 
+app.use("/api/appointments", require("./routes/appointmentRoutes"));
+app.use('/api/users', require('./routes/userRoutes'));
 
 app.get('/', (req, res) => {
   res.send('Welcome to CareBridge API');

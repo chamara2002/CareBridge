@@ -9,10 +9,15 @@ import Footer from './Components/Footer';
 import SignUp from './Pages/SignUp';
 import SignIn from './Pages/SignIn';
 import MidVac from './Pages/MidVac';
+import CreateAppointment from './Pages/AppointmentManagement/CreateAppointment';
+import ManageAppointment from './Pages/AppointmentManagement/ManageAppointment';
+import AppointmentHub from './Pages/AppointmentManagement/AppointmentHub';
 import Service from './Pages/Service';
 import Contact from './Pages/Contact';
 import AIMoodTracker from './Pages/AIMoodTracker';
 import MotherDashboard from './Pages/Mother/MotherDashboard'; 
+import UserProfile from './Pages/UserProfile/UserProfile';
+import ManageAppointments from './Pages/AppointmentManagement/ManageAppointmentMidwife';
 
 const App = () => {
   const [user, setUser] = useState(null); // Track user login state
@@ -31,10 +36,16 @@ const App = () => {
         <Route path="/MidMothers" element={<MothersManagement />} />
         <Route path="/MidNewborns" element={<NewbornManagement />} />
         <Route path="/MidVac" element={<MidVac />} />
+        <Route path="/appointmenthub" element={<AppointmentHub />} />
+        <Route path="/createappointment" element={<CreateAppointment />} />
+        <Route path="/manageappointment" element={<ManageAppointment />} />
         <Route path="/Service" element={<Service />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/AIMoodTracker" element={<AIMoodTracker />} /> 
-        <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />   
+        <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/AppointmentManagement" element={<ManageAppointments />} />
+        {/* Add more routes as needed */}
       </Routes>
       <Footer />
     </Router>

@@ -29,7 +29,7 @@ const MotherMenu = ({ children }) => {
           <li><FaBaby /> {isOpen && <Link to="/Mother/FamilyDetails">Family Details</Link>}</li>
           <li><FaBookMedical /> {isOpen && <Link to="/Mother/HealthRecords">Health Records</Link>}</li>
           <li><FaWeight /> {isOpen && <Link to="/Mother/NewbornProgress">Newborn Progress</Link>}</li>
-          <li><FaCalendarAlt /> {isOpen && <Link to="/Mother/Appointments">Appointments</Link>}</li>
+          <li><FaCalendarAlt /> {isOpen && <Link to="/appointmenthub">Appointments</Link>}</li>
           <li><FaCog /> {isOpen && <Link to="/Mother/Settings">Settings</Link>}</li>
         </ul>
       </div>
