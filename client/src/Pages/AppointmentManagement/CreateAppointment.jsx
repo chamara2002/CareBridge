@@ -11,14 +11,14 @@ const AppointmentForm = () => {
     const [bookedTimes, setBookedTimes] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [midwives, setMidwives] = useState([]);
-    const [userId, setUserId] = useState(null);
+    // const [userId, setUserId] = useState(null);
 
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
             const decoded = jwtDecode(token);
-            setUserId(decoded.userId);
+            // setUserId(decoded.userId);
 
             // Fetch user details
             axios.get(`http://localhost:5000/api/appointments/mothers/${decoded.userId}`)

@@ -4,6 +4,10 @@ import { motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
 import { useForm } from "react-hook-form";
 import "./ManageAppointment.css";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
+
 
 const ManageAppointments = () => {
     const [appointments, setAppointments] = useState([]);
@@ -18,7 +22,7 @@ const ManageAppointments = () => {
 
     useEffect(() => {
         fetchAppointments();
-    }, []);
+    }, );
 
     useEffect(() => {
         const fetchMidwives = async () => {
@@ -124,11 +128,47 @@ const ManageAppointments = () => {
         });
     };
 
+    const generatePDF = () => {
+        const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.text('CareBridge Appointment Report', 14, 22);
+        doc.setFontSize(12);
+        doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+
+        const headers = [['Appointment ID', 'Patient Name', 'Preferred Midwife', 'Date & Time', 'Appointment Type']];
+        const data = appointments.map((a) => [
+            a.appointmentId,
+            a.fullName,
+            a.preferredMidwife || "N/A",
+            new Date(a.suitableTime).toLocaleString(),
+            a.appointmentType || "N/A",
+        ]);
+
+        autoTable(doc, {
+            startY: 35,
+            head: headers,
+            body: data,
+            styles: { fontSize: 10 },
+            headStyles: { fillColor: [248, 131, 121] }, // Changed to match your app's pink color
+            alternateRowStyles: { fillColor: [245, 245, 245] },
+        });
+
+        doc.save('Appointment_Report.pdf');
+    };
+
+
     return (
         <div className="appointments-container">
             <div className="appointments-wrapper">
                 <h1 className="appointments-title">Manage Appointments</h1>
                 <div className="create-btn-container">
+                    <button
+                        onClick={generatePDF}
+                        className="generate-report-btn"
+                    >
+                        Generate Report
+                    </button>
                     <a href="/createappointment">
                         <button className="create-appointment-btn">Create Appointment</button>
                     </a>
