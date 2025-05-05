@@ -12,6 +12,7 @@ import MidVac from './Pages/MidVac';
 import Service from './Pages/Service';
 import Contact from './Pages/Contact';
 import AIMoodTracker from './Pages/AIMoodTracker';
+import MotherDashboard from './Pages/Mother/MotherDashboard'; 
 
 import AddMother from './Pages/NewBorn/NewBoarnForm/AddMother';
 import MotherHome from './Pages/NewBorn/NewbornHome/MotherHome';
@@ -49,6 +50,7 @@ const App = () => {
       <Route path="/update/:motherId" element={<UpdateMother />} />
       <Route path="/view-single/:motherId" element={<ViewMother/>} />
       <Route path="/report-generation" element={<Motherreport/>} />
+        <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />   
       </Routes>
       <Footer />
     </Router>
