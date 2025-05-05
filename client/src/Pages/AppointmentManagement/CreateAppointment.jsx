@@ -146,7 +146,7 @@ const AppointmentForm = () => {
                             </div>
 
                             <div className="form-actions">
-                                <a href="/manageappointment"><button type="button" className="btn-cancel">Cancel</button></a>
+                                <a href="/appointmenthub"><button type="button" className="btn-cancel">Cancel</button></a>
                                 <button 
                                     type="button" 
                                     onClick={() => setStep(2)} 

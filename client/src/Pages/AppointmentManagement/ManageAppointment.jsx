@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom"; // Import Link
 import "./ManageAppointment.css";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -172,6 +173,9 @@ const ManageAppointments = () => {
                     <a href="/createappointment">
                         <button className="create-appointment-btn">Create Appointment</button>
                     </a>
+                    <Link to="/appointmenthub">
+                        <button className="go-back-btn">Go Back</button>
+                    </Link>
                 </div>
                 <table className="appointments-table">
                     <thead>

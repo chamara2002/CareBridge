@@ -9,8 +9,9 @@ import Footer from './Components/Footer';
 import SignUp from './Pages/SignUp';
 import SignIn from './Pages/SignIn';
 import MidVac from './Pages/MidVac';
-import CreateAppointment from './Pages/AppointmentManagement/CreateAppointment'
-import ManageAppointment from './Pages/AppointmentManagement/ManageAppointment'
+import CreateAppointment from './Pages/AppointmentManagement/CreateAppointment';
+import ManageAppointment from './Pages/AppointmentManagement/ManageAppointment';
+import AppointmentHub from './Pages/AppointmentManagement/AppointmentHub';
 
 const App = () => {
   const [user, setUser] = useState(null); // Track user login state
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/MidMothers" element={<MothersManagement />} />
         <Route path="/MidNewborns" element={<NewbornManagement />} />
         <Route path="/MidVac" element={<MidVac />} />
+        <Route path="/appointmenthub" element={<AppointmentHub />} />
         <Route path="/createappointment" element={<CreateAppointment />} />
         <Route path="/manageappointment" element={<ManageAppointment />} />
       </Routes>

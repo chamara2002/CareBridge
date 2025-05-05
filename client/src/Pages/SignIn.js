@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignIn.css";
 
-const SignIn = () => {
+const SignIn = ({ login }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("mother");
@@ -25,9 +25,23 @@ const SignIn = () => {
         if (data.token) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("userRole", role); // Store role
+          console.log(role)
           alert("Login successful");
-
-          navigate("/dashboard");
+          
+          // Call the login function from props
+          if (login) login();
+          
+          // Route based on user role
+          switch (role) {
+            case "mother":
+              navigate("/appointmenthub"); 
+              break;
+            case "midwife":
+              navigate("/dashboard");
+              break;
+            default:
+              navigate("/dashboard");
+          }
         } else {
           alert("Login failed: No token received");
         }
