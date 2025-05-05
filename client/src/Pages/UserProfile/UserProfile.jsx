@@ -43,19 +43,49 @@ const UserProfile = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    // Name validation - should not contain numbers
-    if (formData.name && /\d/.test(formData.name)) {
-      newErrors.name = "Name should not contain numbers";
+    // Name validation - safer approach with length limits
+    if (formData.name) {
+      if (formData.name.length > 50) {
+        newErrors.name = "Name should not exceed 50 characters";
+      } else if (/\d/.test(formData.name)) {
+        newErrors.name = "Name should not contain numbers";
+      } else if (!/^[A-Za-z\s]{2,50}$/.test(formData.name)) {
+        newErrors.name = "Name should contain only letters and spaces";
+      }
     }
     
-    // NIC validation - should be a valid Sri Lankan NIC
-    if (formData.nic && !/^(?:\d{9}[vVxX]|\d{12})$/.test(formData.nic)) {
-      newErrors.nic = "Invalid Sri Lankan NIC";
+    // NIC validation - safer approach similar to CreateAppointment.jsx
+    if (formData.nic) {
+      if (formData.nic.length === 10) {
+        // Old format: 9 digits + v/V/x/X
+        const digits = formData.nic.substring(0, 9);
+        const lastChar = formData.nic[9].toLowerCase();
+        if (!(/^\d{9}$/).test(digits) || (lastChar !== 'v' && lastChar !== 'x')) {
+          newErrors.nic = "Invalid old format NIC (should be 9 digits followed by v/V/x/X)";
+        }
+      } else if (formData.nic.length === 12) {
+        // New format: 12 digits
+        if (!(/^\d{12}$/).test(formData.nic)) {
+          newErrors.nic = "Invalid new format NIC (should be 12 digits)";
+        }
+      } else {
+        newErrors.nic = "NIC must be either 9 digits + v/x or 12 digits";
+      }
     }
     
-    // Email validation
-    if (formData.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email address";
+    // Email validation - safer approach without problematic patterns
+    if (formData.email) {
+      if (formData.email.length > 100) {
+        newErrors.email = "Email is too long";
+      } else if (!formData.email.includes('@') || !formData.email.includes('.')) {
+        newErrors.email = "Email must contain @ and .";
+      } else if (formData.email.indexOf('@') === 0) {
+        newErrors.email = "Email can't start with @";
+      } else if (formData.email.lastIndexOf('.') < formData.email.indexOf('@') + 2) {
+        newErrors.email = "Invalid domain format";
+      } else if (formData.email.lastIndexOf('.') === formData.email.length - 1) {
+        newErrors.email = "Email can't end with a dot";
+      }
     }
 
     setErrors(newErrors);

@@ -98,22 +98,35 @@ const ManageAppointments = () => {
     const validateForm = () => {
         const errors = {};
 
+        // Name validation - limit maximum length to prevent DoS
         if (!selectedAppointment.fullName.trim()) {
             errors.fullName = "Full Name is required";
-        } else if (!/^[A-Za-z\s]{2,}$/.test(selectedAppointment.fullName)) {
-            errors.fullName = "Full Name must contain only letters and at least 2 characters";
+        } else if (!/^[A-Za-z\s]{2,50}$/.test(selectedAppointment.fullName)) {
+            errors.fullName = "Full Name must contain only letters and be between 2-50 characters";
         }
 
+        // Contact validation - fixed length check which is safer than regex
         if (!selectedAppointment.contactNo.trim()) {
             errors.contactNo = "Contact No is required";
-        } else if (!/^0\d{9}$/.test(selectedAppointment.contactNo)) {
-            errors.contactNo = "Contact No must be a valid 10-digit number";
+        } else {
+            const contactNumber = selectedAppointment.contactNo;
+            if (contactNumber.length !== 10 || contactNumber[0] !== '0' || !/^\d+$/.test(contactNumber)) {
+                errors.contactNo = "Contact No must be a valid 10-digit number starting with 0";
+            }
         }
 
+        // Email validation - safer approach with length limits and character checks
         if (!selectedAppointment.emailId.trim()) {
             errors.emailId = "A valid Email is required";
-        } else if (!/\S+@\S+\.\S+/.test(selectedAppointment.emailId)) {
-            errors.emailId = "Enter a valid email address";
+        } else {
+            const email = selectedAppointment.emailId;
+            // Check for critical components of an email rather than using problematic \S+ patterns
+            if (email.length > 100 || !email.includes('@') || !email.includes('.') || 
+                email.indexOf('@') === 0 || 
+                email.lastIndexOf('.') < email.indexOf('@') + 2 ||
+                email.lastIndexOf('.') === email.length - 1) {
+                errors.emailId = "Enter a valid email address";
+            }
         }
 
         return errors;

@@ -101,43 +101,111 @@ const AppointmentForm = () => {
                             <h2 className="section-title">Personal Details</h2>
                             <div className="form-group">
                                 <label className="form-label">Full Name:</label>
-                                <input {...register("fullName", { required: true })} placeholder="Full Name" className="form-input" />
+                                <input 
+                                    {...register("fullName", { 
+                                        required: "Full Name is required",
+                                        maxLength: { value: 50, message: "Name should not exceed 50 characters" },
+                                        validate: value => {
+                                            // Manually validate instead of using potentially dangerous regex
+                                            return (/^[A-Za-z\s]{2,50}$/).test(value) || "Full Name must contain only letters and spaces";
+                                        }
+                                    })} 
+                                    placeholder="Full Name" 
+                                    className="form-input" 
+                                />
                                 {errors.fullName && <span className="error-message">Full Name is required</span>}
                             </div>
 
                             <div className="form-group">
                                 <label className="form-label">Contact No:</label>
-                                <input {...register("contactNo", { 
-                                    required: "Contact Number is required", 
-                                    pattern: { 
-                                        value: /^0(?:7[01245678]|11|21|23|24|25|26|27|31|32|33|34|35|36|37|38|41|45|47|51|52|54|55|56|57|58|63|65|66|67)[0-9]{7}$/,
-                                        message: "Invalid phone number" 
-                                    }
-                                })} placeholder="07X XXXXXXX" className="form-input" />
+                                <input 
+                                    {...register("contactNo", { 
+                                        required: "Contact Number is required",
+                                        validate: value => {
+                                            // Sri Lankan phone number validation
+                                            if (value.length !== 10 || value[0] !== '0') {
+                                                return "Phone number must be 10 digits starting with 0";
+                                            }
+                                            // Check if it matches a valid SL format using a safe approach
+                                            const validPrefixes = ['07', '011', '021', '023', '024', '025', '026', '027', '031', '032', 
+                                                                '033', '034', '035', '036', '037', '038', '041', '045', '047', '051', 
+                                                                '052', '054', '055', '056', '057', '058', '063', '065', '066', '067'];
+                                            
+                                            const prefix = value.substring(0, 2);
+                                            const prefix3 = value.substring(0, 3);
+                                            
+                                            if (prefix === '07') {
+                                                const thirdDigit = parseInt(value[2], 10);
+                                                if (![0,1,2,4,5,6,7,8].includes(thirdDigit)) {
+                                                    return "Invalid mobile number format";
+                                                }
+                                            } else if (!validPrefixes.includes(prefix) && !validPrefixes.includes(prefix3)) {
+                                                return "Invalid phone number prefix";
+                                            }
+                                            
+                                            // Check that all characters are digits
+                                            return /^\d+$/.test(value) || "Phone number must contain only digits";
+                                        }
+                                    })} 
+                                    placeholder="07X XXXXXXX" 
+                                    className="form-input" 
+                                />
                                 {errors.contactNo && <span className="error-message">{errors.contactNo.message}</span>}
                             </div>
 
                             <div className="form-group">
                                 <label className="form-label">NIC:</label>
-                                <input {...register("nic", {
-                                    required: "NIC is required",
-                                    pattern: {
-                                        value: /^(?:\d{9}[vVxX]|\d{12})$/,
-                                        message: "Invalid Sri Lankan NIC"
-                                    }
-                                })} placeholder="NIC" className="form-input" />
+                                <input 
+                                    {...register("nic", {
+                                        required: "NIC is required",
+                                        validate: value => {
+                                            // Sri Lankan NIC validation - safer approach
+                                            if (value.length === 10) {
+                                                // Old format: 9 digits + v/V/x/X
+                                                const digits = value.substring(0, 9);
+                                                const lastChar = value[9].toLowerCase();
+                                                return ((/^\d{9}$/).test(digits) && (lastChar === 'v' || lastChar === 'x')) || 
+                                                    "Invalid old format NIC (should be 9 digits followed by v/V/x/X)";
+                                            } else if (value.length === 12) {
+                                                // New format: 12 digits
+                                                return (/^\d{12}$/).test(value) || "Invalid new format NIC (should be 12 digits)";
+                                            }
+                                            return "NIC must be either 9 digits + v/x or 12 digits";
+                                        }
+                                    })} 
+                                    placeholder="NIC" 
+                                    className="form-input" 
+                                />
                                 {errors.nic && <span className="error-message">{errors.nic.message}</span>}
                             </div>
 
                             <div className="form-group">
                                 <label className="form-label">Email ID:</label>
-                                <input {...register("emailId", { 
-                                    required: "Email is required", 
-                                    pattern: { 
-                                        value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/, 
-                                        message: "Invalid email address" 
-                                    } 
-                                })} type="email" placeholder="Email ID" className="form-input" />
+                                <input 
+                                    {...register("emailId", { 
+                                        required: "Email is required",
+                                        maxLength: { value: 100, message: "Email is too long" },
+                                        validate: value => {
+                                            // Basic email validation without problematic patterns
+                                            if (!value.includes('@') || !value.includes('.')) {
+                                                return "Email must contain @ and .";
+                                            }
+                                            if (value.indexOf('@') === 0) {
+                                                return "Email can't start with @";
+                                            }
+                                            if (value.lastIndexOf('.') < value.indexOf('@') + 2) {
+                                                return "Invalid domain format";
+                                            }
+                                            if (value.lastIndexOf('.') === value.length - 1) {
+                                                return "Email can't end with a dot";
+                                            }
+                                            return true;
+                                        }
+                                    })} 
+                                    type="email" 
+                                    placeholder="Email ID" 
+                                    className="form-input" 
+                                />
                                 {errors.emailId && <span className="error-message">{errors.emailId.message}</span>}
                             </div>
 
