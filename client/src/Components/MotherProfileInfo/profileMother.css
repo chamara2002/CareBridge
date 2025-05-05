@@ -1,0 +1,34 @@
+.mother-history-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mother-history-card {
+    background: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border-left: 5px solid #c13c8e;
+  }
+  
+  .vaccination-header{
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+  
+.vaccination-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+.li-mother-profile {
+    background: #e9f5ff;
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+  }
+  

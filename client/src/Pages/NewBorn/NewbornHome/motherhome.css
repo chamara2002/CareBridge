@@ -1,0 +1,64 @@
+.mother-home {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding-bottom: 30px;
+}
+
+.mother-home-h1 {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333333;
+  text-align: center;
+  align-items: center;
+  margin: 20px 0;
+  padding-top: 20px;
+}
+
+.mother-card-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.mother-section {
+  margin-top: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.mother-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.mother-action-btn {
+  background: #4a89dc;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.mother-action-btn:hover {
+  background-color: #2980b9;
+}
+
+@media (max-width: 768px) {
+  .mother-home-h1 {
+    font-size: 20px;
+  }
+  
+  .mother-section {
+    padding: 15px;
+  }
+}

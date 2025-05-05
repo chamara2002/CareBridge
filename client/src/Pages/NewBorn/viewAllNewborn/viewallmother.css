@@ -1,0 +1,138 @@
+.view-mother-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .mother-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow-x: auto;
+  }
+  
+  .mother-table th,
+  .mother-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .mother-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .mother-table td {
+    background-color: #f9f9f9;
+  }
+  
+  .mother-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .mother-table tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .action-icons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .action-icon {
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .action-icons a {
+    color: #4a89dc;
+    text-decoration: none;
+  }
+  
+  .action-icons a:nth-child(1) {
+    color: #4a89dc;
+  }
+  
+  .action-icons a:nth-child(2) {
+    color: #f6bb42;
+  }
+  
+  .action-icons svg:last-child {
+    color: #ed5565;
+  }
+  
+  .action-icons svg:hover {
+    opacity: 0.8;
+  }
+  
+  .h1-mother-register{
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+  }
+
+  .search-bar {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 20px;
+    padding: 8px 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .search-bar:focus {
+    outline: none;
+    border-color: #4a89dc;
+    box-shadow: 0 0 5px rgba(74, 137, 220, 0.3);
+  }
+  
+  .search-bar::placeholder {
+    color: #aab2bd;
+  }
+  
+  .title-mother-reg {
+    margin-bottom: 30px;
+    color: #333333;
+    font-weight: 600;
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .view-all-mothers {
+    margin-left: 150px;
+    margin-right: 150px;
+  }
+  
+  .view-all-newbron {
+    background-color: #f8f9fa;
+    padding: 20px;
+    min-height: 80vh;
+  }
+  
+  .view-all-mother {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .view-all-mother {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    
+    .mother-table {
+      display: block;
+      overflow-x: auto;
+    }
+    
+    .title-mother-reg {
+      font-size: 20px;
+    }
+  }

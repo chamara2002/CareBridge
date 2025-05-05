@@ -1,0 +1,103 @@
+.generate-pdf-btn {
+  background-color: #4a89dc;
+  color: white;
+  padding: 8px 15px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.generate-pdf-btn:hover {
+  background-color: #2980b9;
+}
+
+/* report.css */
+
+.btn-pdf {
+  background-color: #4a89dc;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.btn-pdf:hover {
+  background-color: #2980b9;
+}
+
+.btn-pdf:active {
+  background-color: #2980b9;
+}
+
+.newbron-report {
+  background-color: #f8f9fa;
+  padding: 20px;
+  min-height: 80vh;
+}
+
+.view-all-mother {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title-mother-reg {
+  margin-bottom: 30px;
+  color: #333333;
+  font-weight: 600;
+  font-size: 24px;
+  text-align: center;
+}
+
+.mother-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow-x: auto;
+}
+
+.mother-table th,
+.mother-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.mother-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.mother-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+  .view-all-mother {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .mother-table {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .title-mother-reg {
+    font-size: 20px;
+  }
+  
+  .btn-pdf {
+    width: 100%;
+    text-align: center;
+  }
+}

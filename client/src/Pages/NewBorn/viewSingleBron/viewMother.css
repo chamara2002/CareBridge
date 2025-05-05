@@ -1,0 +1,172 @@
+.single-mother-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  background: #f8f9fa; /* Match MidNewborns background */
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 80vh;
+}
+
+.single-mother-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.mother-details-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Match MidNewborns shadow */
+  padding: 25px;
+  width: 100%;
+  max-width: 600px;
+  transition: all 0.3s ease;
+}
+
+.mother-details-card:hover {
+  transform: scale(1.02);
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.profile-icon {
+  font-size: 60px;
+  color: #4a89dc; /* Match MidNewborns primary color */
+}
+
+.profile-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.mother-id {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.mother-info {
+  display: grid;
+  gap: 12px;
+}
+
+.mother-info p {
+  margin: 0;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  border-left: 3px solid #4a89dc; /* Match MidNewborns primary color */
+}
+
+.mother-info strong {
+  color: #555;
+  font-weight: 500;
+}
+
+/* Back button styling (if needed) */
+.back-btn {
+  background: #aab2bd; /* Match MidNewborns secondary button */
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.back-btn:hover {
+  background-color: #9aa1ad;
+}
+
+/* Health status indicators (if applicable) */
+.status-healthy {
+  background-color: #b4cf97 !important;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-needs-attention {
+  background-color: #ffe6ab !important;
+  color: #333;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-critical {
+  background-color: #fca9a9 !important;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .single-mother-container {
+    padding: 20px;
+  }
+  
+  .mother-details-card {
+    padding: 15px;
+  }
+  
+  .profile-icon {
+    font-size: 40px;
+  }
+  
+  .single-mother-title {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .mother-details-card {
+    width: 90%;
+  }
+
+  .single-mother-title {
+    font-size: 1.8rem;
+  }
+}
+.register-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.register-btn:hover {
+  background: #0056b3;
+}
