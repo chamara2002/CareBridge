@@ -53,7 +53,7 @@ const Navbar = () => {
               {/* Role-based dashboard link */}
               {user.role === "mother" && (
                 <li>
-                  <Link to="/mother-dashboard">Mother Dashboard</Link>
+                  <Link to="/Mother/MotherDashboard">Mother Dashboard</Link>
                 </li>
               )}
               {user.role === "mother" && (
