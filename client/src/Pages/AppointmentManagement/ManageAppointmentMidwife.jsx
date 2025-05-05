@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./ManageAppointmentMidwife.css";
+import MidMenu from "../MidMenu";
 
 function ManageAppointmentMidwife() {
     const [date, setDate] = useState(new Date());
@@ -67,6 +68,7 @@ function ManageAppointmentMidwife() {
     };
 
     return (
+        <MidMenu>
         <div className="midwife-appointment-container">
             <div className="newborn-management">
                 <h2 className="section-title">Manage Appointments</h2>
@@ -169,6 +171,7 @@ function ManageAppointmentMidwife() {
                 </div>
             )}
         </div>
+        </MidMenu>
     );
 }
 

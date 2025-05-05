@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { FaCalendarPlus, FaCalendarAlt, FaUserMd } from 'react-icons/fa';
 import './AppointmentHub.css';
 import { useEffect, useState } from 'react';
+import MotherMenu from '../Mother/MotherMenu';
 
 const AppointmentHub = () => {
   const [userRole, setUserRole] = useState('');
@@ -13,6 +14,7 @@ const AppointmentHub = () => {
   }, []);
 
   return (
+    <MotherMenu>
     <div className="appointment-hub-container">
       <h1 className="hub-title">Create or Modify your Appointment</h1>
       <div className="hub-description">
@@ -88,6 +90,7 @@ const AppointmentHub = () => {
         )}
       </div>
     </div>
+    </MotherMenu>
   );
 };
 

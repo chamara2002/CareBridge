@@ -4,6 +4,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
 import "./CreateAppointment.css";
+import MotherMenu from '../Mother/MotherMenu';
 
 const AppointmentForm = () => {
     const { register, handleSubmit, setValue, reset, formState: { errors, isValid } } = useForm({ mode: "onChange" });
@@ -90,6 +91,7 @@ const AppointmentForm = () => {
     };
 
     return (
+        <MotherMenu>
         <div className="appointment-container">
             <div className="appointment-form-container">
                 <h1 className="form-title">Book an Appointment</h1>
@@ -223,6 +225,7 @@ const AppointmentForm = () => {
                 </form>
             </div>
         </div>
+        </MotherMenu>
     );
 };
 

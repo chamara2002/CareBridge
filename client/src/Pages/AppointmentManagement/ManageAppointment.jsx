@@ -8,6 +8,7 @@ import "./ManageAppointment.css";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import autoTable from 'jspdf-autotable';
+import MotherMenu from "../Mother/MotherMenu";
 
 
 const ManageAppointments = () => {
@@ -160,6 +161,7 @@ const ManageAppointments = () => {
 
 
     return (
+        <MotherMenu>
         <div className="appointments-container">
             <div className="appointments-wrapper">
                 <h1 className="appointments-title">Manage Appointments</h1>
@@ -359,6 +361,7 @@ const ManageAppointments = () => {
                 )}
             </div>
         </div>
+        </MotherMenu>
     );
 };
 
