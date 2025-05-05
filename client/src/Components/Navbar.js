@@ -1,18 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { FaUserCircle } from 'react-icons/fa';
 import "./Navbar.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const dropdownRef = useRef(null);
 
-  // Check for token on page load to persist login
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userRole = localStorage.getItem("userRole"); // Store role in localStorage during login
     if (token) {
       setUser({ loggedIn: true, role: userRole });
     }
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowProfileMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   // Logout function
@@ -41,10 +54,10 @@ const Navbar = () => {
             <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/services">Services</Link>
+            <Link to="/Service">Services</Link>
           </li>
           <li>
-            <Link to="/contact">Contact</Link>
+            <Link to="/Contact">Contact</Link>
           </li>
 
           {/* Conditionally show Dashboard and Logout if logged in */}
@@ -53,7 +66,12 @@ const Navbar = () => {
               {/* Role-based dashboard link */}
               {user.role === "mother" && (
                 <li>
-                  <Link to="/mother-dashboard">Mother Dashboard</Link>
+                  <Link to="/Mother/MotherDashboard">Mother Dashboard</Link>
+                </li>
+              )}
+              {user.role === "mother" && (
+                <li>
+                  <Link to="/AIMoodTracker">Mood Tracker</Link>
                 </li>
               )}
               {user.role === "midwife" && (
@@ -67,10 +85,22 @@ const Navbar = () => {
                 </li>
               )}
 
-              <li>
-                <button className="btn-logout" onClick={handleLogout}>
-                  Logout
+              <li className="profile-menu-container" ref={dropdownRef}>
+                <button 
+                  className="profile-menu-trigger"
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                >
+                  <FaUserCircle />
                 </button>
+                {showProfileMenu && (
+                  <div className="profile-dropdown">
+                    <Link to="/profile" onClick={() => setShowProfileMenu(false)}>My Profile</Link>
+                    <button onClick={() => {
+                      handleLogout();
+                      setShowProfileMenu(false);
+                    }}>Logout</button>
+                  </div>
+                )}
               </li>
             </>
           ) : (

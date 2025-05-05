@@ -1,0 +1,88 @@
+/* Service.css */
+.service-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .service-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .service-header h1 {
+    color: #2c3e50;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .service-header p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+  }
+  
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .service-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-icon {
+    color: #4a89dc;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .service-card h3 {
+    color: #2c3e50;
+    margin-bottom: 0.8rem;
+    font-size: 1.3rem;
+  }
+  
+  .service-card p {
+    color: #656565;
+    line-height: 1.5;
+    font-size: 0.95rem;
+  }
+  
+  .service-footer {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    margin-top: 1rem;
+  }
+  
+  .service-footer h2 {
+    color: #2c3e50;
+    margin-bottom: 1.2rem;
+  }
+  
+  .contact-btn {
+    background-color: #4a89dc;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .contact-btn:hover {
+    background-color: #3a70c2;
+  }
