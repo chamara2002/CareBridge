@@ -1,0 +1,379 @@
+.midwife-appointment-container {
+  min-height: 100vh;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.midwife-header {
+  background-color: #d1d5db;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.app-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.header-icons {
+  display: flex;
+  gap: 1rem;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #4b5563;
+}
+
+.main-content {
+  padding: 20px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+@media (min-width: 768px) {
+  .search-container {
+    width: 50%;
+  }
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  color: #aab2bd;
+  margin-right: 10px;
+}
+
+.search-input {
+  background-color: transparent;
+  outline: none;
+  width: 100%;
+  color: #333;
+  border: none;
+  padding: 8px;
+}
+
+.appointment-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .appointment-content {
+    flex-direction: row;
+  }
+  
+  .calendar-container {
+    width: 320px;
+    flex-shrink: 0;
+  }
+  
+  .appointments-list {
+    flex: 1;
+  }
+}
+
+.calendar-container {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+
+/* Custom styling for react-calendar */
+.react-calendar {
+  border: none;
+  font-family: inherit;
+  background-color: #fff;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.react-calendar button {
+  color: #333;
+}
+
+.react-calendar__tile--active {
+  background: #4a89dc;
+  color: white;
+}
+
+.react-calendar__tile--now {
+  background: #f6bb42;
+}
+
+.appointments-list {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+}
+
+.appointment-card {
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #eee;
+  position: relative;
+  overflow: hidden;
+}
+
+.appointment-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.appointment-card.status-approved {
+  background-color: #e6f7e6;
+  border-left: 4px solid #b4cf97;
+}
+
+.appointment-card.status-rejected {
+  background-color: #ffefef;
+  border-left: 4px solid #ed5565;
+}
+
+.appointment-card.status-completed {
+  background-color: #e6f0fa;
+  border-left: 4px solid #4a89dc;
+}
+
+.appointment-card.status-pending {
+  background-color: #fff8e6;
+  border-left: 4px solid #f6bb42;
+}
+
+.appointment-date {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.appointment-time {
+  font-size: 14px;
+  color: #4a89dc;
+  margin: 0 0 5px 0;
+}
+
+.appointment-name {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  margin: 0 0 5px 0;
+}
+
+.appointment-type {
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 5px 0;
+}
+
+.appointment-status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 5px;
+}
+
+.status-approved {
+  background-color: #b4cf97;
+  color: #fff;
+}
+
+.status-rejected {
+  background-color: #ed5565;
+  color: #fff;
+}
+
+.status-completed {
+  background-color: #4a89dc;
+  color: #fff;
+}
+
+.status-pending {
+  background-color: #f6bb42;
+  color: #fff;
+}
+
+.no-appointments {
+  color: #aab2bd;
+  text-align: center;
+  padding: 20px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  border: 1px solid #ddd;
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: #aab2bd;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #4a89dc;
+}
+
+.close-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.modal-detail {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 14px;
+}
+
+.modal-detail:last-of-type {
+  margin-bottom: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.approve-button, 
+.complete-button, 
+.reject-button {
+  color: white;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: none;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.approve-button {
+  background-color: #b4cf97;
+}
+
+.approve-button:hover {
+  background-color: #9bbd7e;
+}
+
+.complete-button {
+  background-color: #4a89dc;
+}
+
+.complete-button:hover {
+  background-color: #2980b9;
+}
+
+.reject-button {
+  background-color: #ed5565;
+}
+
+.reject-button:hover {
+  background-color: #d9434f;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-actions {
+  justify-content: flex-end;
+  gap: 10px;
+}
