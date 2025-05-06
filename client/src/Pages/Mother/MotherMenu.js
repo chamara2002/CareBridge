@@ -5,9 +5,7 @@ import {
   FaCalendarAlt, 
   FaUserAlt,
   FaBaby,
-  FaBookMedical,
   FaWeight,
-  FaCog,
   FaBars 
 } from 'react-icons/fa';
 import '../Dashboard.css';
@@ -25,12 +23,10 @@ const MotherMenu = ({ children }) => {
         </button>
         <ul className='tags'>
           <li><FaHome /> {isOpen && <Link to="/Mother/MotherDashboard">Dashboard</Link>}</li>
-          <li><FaUserAlt /> {isOpen && <Link to="/Mother/Profile">My Profile</Link>}</li>
+          <li><FaUserAlt /> {isOpen && <Link to="/Mother/Profile">Mother Details</Link>}</li>
           <li><FaBaby /> {isOpen && <Link to="/Mother/FamilyDetails">Family Details</Link>}</li>
-          <li><FaBookMedical /> {isOpen && <Link to="/Mother/HealthRecords">Health Records</Link>}</li>
-          <li><FaWeight /> {isOpen && <Link to="/Mother/NewbornProgress">Newborn Progress</Link>}</li>
+          <li><FaWeight /> {isOpen && <Link to="/Mother/NewbornProgress">Newborn Details</Link>}</li>
           <li><FaCalendarAlt /> {isOpen && <Link to="/appointmenthub">Appointments</Link>}</li>
-          <li><FaCog /> {isOpen && <Link to="/Mother/Settings">Settings</Link>}</li>
         </ul>
       </div>
 
