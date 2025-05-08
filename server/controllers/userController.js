@@ -84,8 +84,24 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+// Get all mothers
+const getAllMothers = async (req, res) => {
+  try {
+    console.log('Fetching all mothers');
+    const mothers = await User.find({ role: 'mother' }).select('-password');
+    
+    console.log(`Found ${mothers.length} mothers`);
+    
+    return res.status(200).json(mothers);
+  } catch (error) {
+    console.error('Error fetching mothers:', error);
+    return res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 module.exports = {
   getUserProfile,
   updateUserProfile,
-  getAllUsers
+  getAllUsers,
+  getAllMothers
 };

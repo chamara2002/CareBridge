@@ -1,25 +1,25 @@
-/* Mothers Management Page Styles */
-.mothers-management {
+/* Midwives List Page Styles */
+.midwives-container {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.mothers-management h2 {
+.midwives-container h2 {
   color: #333333;
   margin-bottom: 20px;
   font-size: 24px;
   font-weight: 600;
 }
 
-.mothers-controls {
+.midwives-controls {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
   align-items: center;
 }
 
-/* Search container styling similar to appointments */
+/* Search container styling */
 .search-container {
   display: flex;
   align-items: center;
@@ -49,7 +49,7 @@
 }
 
 /* Table styling */
-.mothers-table {
+.midwives-table {
   overflow-x: auto;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   border-radius: 8px;
@@ -71,62 +71,35 @@ th, td {
 th {
   background-color: #f8f9fa;
   font-weight: 600;
-  color: #333;
 }
 
-tbody tr:hover {
-  background-color: #f5f5f5;
-}
-
-/* Status badges */
-.status-badge {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 12px;
-  font-weight: 500;
-  text-align: center;
-}
-
-.status-pregnant {
-  background-color: #b4cf97;
-  color: white;
-}
-
-.status-postpartum {
-  background-color: #4a89dc;
-  color: white;
-}
-
-.status-unknown {
-  background-color: #aab2bd;
-  color: white;
-}
-
-/* Action buttons */
 .btn-view {
   background-color: #4a89dc;
   color: white;
   border: none;
-  padding: 8px 15px;
+  padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  transition: background-color 0.3s;
 }
 
 .btn-view:hover {
-  background-color: #2980b9;
+  background-color: #3a70b1;
 }
 
-/* Loading and Error states */
-.loading, .error-message, .no-results {
+.loading, .no-results {
   text-align: center;
   padding: 20px;
   color: #666;
 }
 
 .error-message {
-  color: #ed5565;
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border-left: 4px solid #d32f2f;
 }
 
 /* Modal styles */
@@ -136,7 +109,7 @@ tbody tr:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -144,10 +117,9 @@ tbody tr:hover {
 }
 
 .modal-content {
-  background-color: #fff;
-  padding: 25px;
+  background-color: white;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 25px;
   width: 90%;
   max-width: 700px;
   position: relative;
@@ -179,80 +151,71 @@ tbody tr:hover {
   padding-bottom: 10px;
 }
 
-/* Mother details styling */
-.mother-details {
+/* Midwife details styling */
+.midwife-details {
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
 }
 
 @media (min-width: 768px) {
-  .mother-details {
+  .midwife-details {
     grid-template-columns: 1fr 1fr;
-  }
-  
-  .detail-group:first-child {
-    grid-column: span 2;
   }
 }
 
 .detail-group {
-  background-color: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
 }
 
 .detail-group h3 {
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 10px;
   color: #4a89dc;
-  border-bottom: 1px solid #e6e9ed;
-  padding-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .detail-group p {
   margin: 8px 0;
-  font-size: 14px;
   color: #333;
 }
 
-.detail-group strong {
-  font-weight: 600;
-}
-
 .modal-actions {
+  margin-top: 20px;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 20px;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
 }
 
 .btn-primary {
-  background: #4a89dc;
+  background-color: #4a89dc;
   color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
 }
 
 .btn-primary:hover {
-  background-color: #2980b9;
+  background-color: #3a70b1;
 }
 
 .btn-secondary {
-  background: #aab2bd;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
+  background-color: #e8e8e8;
+  color: #333;
 }
 
 .btn-secondary:hover {
-  background-color: #9aa1af;
+  background-color: #d5d5d5;
+}
+
+.no-results {
+  text-align: center;
+  padding: 20px;
+  color: #666;
 }
