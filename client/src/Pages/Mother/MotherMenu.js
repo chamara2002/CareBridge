@@ -4,7 +4,6 @@ import {
   FaHome, 
   FaCalendarAlt, 
   FaUserAlt,
-  FaBaby,
   FaWeight,
   FaSyringe,
   FaBars 
