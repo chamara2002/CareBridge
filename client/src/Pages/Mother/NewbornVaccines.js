@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import MidMenu from './MotherMenu';
 import './NewbornVaccines.css';
-import { jsPDF } from "jspdf";
-import autoTable from 'jspdf-autotable';
 
 const MidVac = () => {
   const [vaccinations, setVaccinations] = useState([]);
