@@ -72,3 +72,22 @@ exports.deleteVaccination = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+// @desc    Get vaccinations by newborn ID
+// @route   GET /api/midvac/newborn/:newbornId
+// @access  Public
+exports.getVaccinationsByNewbornId = async (req, res) => {
+  try {
+    const newbornId = req.params.newbornId;
+    
+    if (!newbornId) {
+      return res.status(400).json({ msg: 'Newborn ID is required' });
+    }
+    
+    const vaccinations = await midvac.find({ newbornId }).sort({ scheduledDate: 1 });
+    res.json(vaccinations);
+  } catch (err) {
+    console.error('Error fetching vaccinations by newborn ID:', err.message);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+};

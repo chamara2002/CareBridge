@@ -1,0 +1,258 @@
+.vaccination-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.vaccination-container h2 {
+  color: #333333;
+  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.page-description {
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Loading and error states */
+.loading-message, .error-message, .no-data-message {
+  padding: 20px;
+  text-align: center;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+.loading-message {
+  background-color: #f5f7fa;
+  color: #656d78;
+}
+
+.error-message {
+  background-color: #ffeeee;
+  color: #d9534f;
+}
+
+.no-data-message {
+  color: #666;
+  font-style: italic;
+}
+
+/* Table styling */
+.newborns-table {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.newborns-table h3 {
+  margin-bottom: 15px;
+  color: #333;
+  font-weight: 600;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Buttons */
+.btn-view-vaccines {
+  background: #4a89dc;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.btn-view-vaccines:hover {
+  background-color: #3a70b1;
+}
+
+/* Upcoming vaccination styling */
+.upcoming-vaccination {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.scheduled-date {
+  font-size: 12px;
+  color: #666;
+}
+
+.no-upcoming {
+  color: #aaa;
+  font-style: italic;
+}
+
+/* Status badges */
+.vaccination-status {
+  padding: 3px 6px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+  text-align: center;
+  margin-top: 3px;
+}
+
+.status-completed {
+  background-color: #a0d468;
+  color: white;
+}
+
+.status-scheduled {
+  background-color: #4fc1e9;
+  color: white;
+}
+
+.status-due {
+  background-color: #ffce54;
+  color: #333;
+}
+
+.status-overdue {
+  background-color: #ed5565;
+  color: white;
+}
+
+.status-unknown {
+  background-color: #ccd1d9;
+  color: #333;
+}
+
+/* Modal styles */
+.vaccination-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.vaccination-modal {
+  background: white;
+  border-radius: 8px;
+  padding: 25px;
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #aab2bd;
+}
+
+.close-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.newborn-info {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+}
+
+.vaccination-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.vaccination-table th,
+.vaccination-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.vaccination-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.no-vaccinations-message {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.small-note {
+  font-size: 0.8em;
+  color: #888;
+  margin-top: 5px;
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-btn {
+  padding: 8px 16px;
+  background-color: #aab2bd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background-color: #999;
+}
+
+@media (max-width: 768px) {
+  .vaccination-modal {
+    width: 90%;
+    padding: 15px;
+  }
+  
+  th, td {
+    padding: 8px;
+  }
+  
+  .upcoming-vaccination {
+    font-size: 0.9em;
+  }
+}

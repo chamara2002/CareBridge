@@ -18,7 +18,12 @@ exports.getNewborns = async (req, res) => {
 // @access  Public
 exports.addNewborn = async (req, res) => {
   try {
-    const { name, birthDate, weight, height, headCircumference, healthStatus } = req.body;
+    const { name, birthDate, weight, height, headCircumference, healthStatus, motherId } = req.body;
+
+    // Validate that motherId exists
+    if (!motherId) {
+      return res.status(400).json({ msg: 'Mother ID is required' });
+    }
 
     const newNewborn = new Newborn({
       name,
@@ -26,7 +31,8 @@ exports.addNewborn = async (req, res) => {
       weight,
       height,
       headCircumference,
-      healthStatus
+      healthStatus,
+      motherId
     });
 
     const newborn = await newNewborn.save();
@@ -44,6 +50,7 @@ exports.updateNewborn = async (req, res) => {
   try {
     const { name, birthDate, weight, height, headCircumference, healthStatus } = req.body;
 
+    // We don't include motherId in the updates to prevent changing ownership
     const updatedNewborn = {
       name,
       birthDate,
@@ -53,17 +60,21 @@ exports.updateNewborn = async (req, res) => {
       healthStatus
     };
 
-    const newborn = await Newborn.findByIdAndUpdate(
+    // Also check if the newborn belongs to the mother making the request
+    const newborn = await Newborn.findById(req.params.id);
+    
+    if (!newborn) {
+      return res.status(404).json({ msg: 'Newborn not found' });
+    }
+
+    // Update the newborn
+    const updated = await Newborn.findByIdAndUpdate(
       req.params.id,
       { $set: updatedNewborn },
       { new: true }
     );
 
-    if (!newborn) {
-      return res.status(404).json({ msg: 'Newborn not found' });
-    }
-
-    res.json(newborn);
+    res.json(updated);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -75,13 +86,35 @@ exports.updateNewborn = async (req, res) => {
 // @access  Public
 exports.deleteNewborn = async (req, res) => {
   try {
-    const newborn = await Newborn.findByIdAndDelete(req.params.id);
+    // First find the newborn to check ownership
+    const newborn = await Newborn.findById(req.params.id);
 
     if (!newborn) {
       return res.status(404).json({ msg: 'Newborn not found' });
     }
 
+    // Delete the newborn
+    await Newborn.findByIdAndDelete(req.params.id);
     res.json({ msg: 'Newborn removed' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+// @desc    Get newborns by mother ID
+// @route   GET /api/midnewborns/mother/:motherId
+// @access  Public
+exports.getNewbornsByMotherId = async (req, res) => {
+  try {
+    const motherId = req.params.motherId;
+    
+    if (!motherId) {
+      return res.status(400).json({ msg: 'Mother ID is required' });
+    }
+    
+    const newborns = await Newborn.find({ motherId }).sort({ createdAt: -1 });
+    res.json(newborns);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

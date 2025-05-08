@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import MidMenu from './MidMenu';
 import './MidVac.css';
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable';
 
 const MidVac = () => {
   const [vaccinations, setVaccinations] = useState([]);
   const [newborns, setNewborns] = useState([]); // New state for storing newborns
+  const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({
     id: '',
     newbornId: '',
@@ -112,11 +115,58 @@ const MidVac = () => {
     setErrors({});
   };
 
+  const filteredVaccinations = vaccinations.filter(vac => 
+    vac.newbornId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    vac.vaccineName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(18);
+    doc.text('Vaccination Records', 14, 22);
+    doc.setFontSize(11);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
+
+    const tableColumn = ["Newborn Name", "Vaccine Name", "Vaccination Date", "Status"];
+    const tableRows = filteredVaccinations.map(vac => [
+      vac.newbornId ? vac.newbornId.name : 'No Name',
+      vac.vaccineName,
+      new Date(vac.scheduledDate).toLocaleDateString(),
+      vac.status
+    ]);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 40,
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [74, 137, 220] }
+    });
+
+    doc.save("vaccination-records.pdf");
+  };
+
   return (
     <MidMenu>
       <div className="vaccination-management">
         <h2>Newborn Vaccination Management</h2>
-        <button onClick={() => setShowForm(true)} className="btn-primary">Add Vaccination</button>
+        <div className="top-controls">
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search by newborn or vaccine name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+          <div className="button-container">
+            <button onClick={() => setShowForm(true)} className="btn-primary">Add Vaccination</button>
+            <button onClick={generatePDF} className="btn-export">Export PDF</button>
+          </div>
+        </div>
 
         {showForm && (
           <div className="vaccination-form">
@@ -178,7 +228,7 @@ const MidVac = () => {
               </tr>
             </thead>
             <tbody>
-              {vaccinations.map((vac) => (
+              {filteredVaccinations.map((vac) => (
                 <tr key={vac._id} className={`status-${vac.status.toLowerCase()}`}>
                   <td>{vac.newbornId ? vac.newbornId.name : 'No Name'}</td>
                   <td>{vac.vaccineName}</td>

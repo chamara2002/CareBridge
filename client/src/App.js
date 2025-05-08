@@ -9,10 +9,18 @@ import Footer from './Components/Footer';
 import SignUp from './Pages/SignUp';
 import SignIn from './Pages/SignIn';
 import MidVac from './Pages/MidVac';
+import CreateAppointment from './Pages/AppointmentManagement/CreateAppointment';
+import ManageAppointment from './Pages/AppointmentManagement/ManageAppointment';
+import AppointmentHub from './Pages/AppointmentManagement/AppointmentHub';
 import Service from './Pages/Service';
 import Contact from './Pages/Contact';
 import AIMoodTracker from './Pages/AIMoodTracker';
 import MotherDashboard from './Pages/Mother/MotherDashboard'; 
+import UserProfile from './Pages/UserProfile/UserProfile';
+import ManageAppointments from './Pages/AppointmentManagement/ManageAppointmentMidwife';
+import MotherDetails from './Pages/Mother/MotherDetails'; // Import the new component
+import MotherNewborns from './Pages/Mother/MotherNewborns'; // Import the new component
+import NewbornVaccines from './Pages/Mother/NewbornVaccines'; // Import the new component
 
 import AddMother from './Pages/NewBorn/NewBoarnForm/AddMother';
 import MotherHome from './Pages/NewBorn/NewbornHome/MotherHome';
@@ -38,6 +46,9 @@ const App = () => {
         <Route path="/MidMothers" element={<MothersManagement />} />
         <Route path="/MidNewborns" element={<NewbornManagement />} />
         <Route path="/MidVac" element={<MidVac />} />
+        <Route path="/appointmenthub" element={<AppointmentHub />} />
+        <Route path="/createappointment" element={<CreateAppointment />} />
+        <Route path="/manageappointment" element={<ManageAppointment />} />
         <Route path="/Service" element={<Service />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/AIMoodTracker" element={<AIMoodTracker />} /> 
@@ -51,6 +62,12 @@ const App = () => {
       <Route path="/view-single/:motherId" element={<ViewMother/>} />
       <Route path="/report-generation" element={<Motherreport/>} />
         <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />   
+        <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/AppointmentManagement" element={<ManageAppointments />} />
+        <Route path="/Mother/MotherDetails" element={<MotherDetails />} /> {/* Add the new route */}
+        <Route path="/Mother/NewbornDetails" element={<MotherNewborns />} /> {/* New route for mother's newborns */}
+        <Route path="/Mother/VaccineDetails" element={<NewbornVaccines />} />
       </Routes>
       <Footer />
     </Router>
