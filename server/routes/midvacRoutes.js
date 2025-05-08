@@ -4,7 +4,8 @@ const {
   getVaccinations,
   addVaccination,
   updateVaccination,
-  deleteVaccination
+  deleteVaccination,
+  getVaccinationsByNewbornId
 } = require('../controllers/midvacController');
 
 router.route('/')
@@ -14,5 +15,9 @@ router.route('/')
 router.route('/:id')
   .put(updateVaccination)
   .delete(deleteVaccination);
+
+// Add new route for getting vaccinations by newborn ID
+router.route('/newborn/:newbornId')
+  .get(getVaccinationsByNewbornId);
 
 module.exports = router;

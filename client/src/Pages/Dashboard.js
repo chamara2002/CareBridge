@@ -1,21 +1,20 @@
+import React from 'react';
 import MidMenu from './MidMenu';
+import './Dashboard.css';
 
 const Dashboard = () => {
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const username = localStorage.getItem('name') || 'Midwife';
+
   return (
     <MidMenu>
-      <h1>Welcome to the Midwife Dashboard</h1>
-      <div className="stats">
-        <div className="card">Total Appointments: 12</div>
-        <div className="card">New Messages: 5</div>
-        <div className="card">Midwives Connected: 8</div>
+      <div className="dashboard-container">
+        {/* Welcome Section */}
+        <div className="welcome-card">
+          <h1 className="dashboard-title">Welcome, {username}</h1>
+          <p className="dashboard-subtitle">Today is {today}</p>
+        </div>
       </div>
-
-      <h2>Recent Activities</h2>
-      <ul className="activities">
-        <li>New appointment scheduled with Dr. Smith</li>
-        <li>Message from Midwife Jane Doe</li>
-        <li>Updated profile information</li>
-      </ul>
     </MidMenu>
   );
 };

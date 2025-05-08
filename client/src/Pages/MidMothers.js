@@ -153,6 +153,13 @@ const MothersManagement = () => {
                   <p><strong>Phone:</strong> {selectedMother.emergencyContact?.phone || 'Not provided'}</p>
                   <p><strong>Relationship:</strong> {selectedMother.emergencyContact?.relationship || 'Not provided'}</p>
                 </div>
+
+                <div className="detail-group">
+                  <h3>Husband/Partner Details</h3>
+                  <p><strong>Name:</strong> {selectedMother.husbandDetails?.name || 'Not provided'}</p>
+                  <p><strong>Phone:</strong> {selectedMother.husbandDetails?.phone || 'Not provided'}</p>
+                  <p><strong>Occupation:</strong> {selectedMother.husbandDetails?.occupation || 'Not provided'}</p>
+                </div>
               </div>
 
               <div className="modal-actions">

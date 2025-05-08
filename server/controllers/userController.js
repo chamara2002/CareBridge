@@ -23,7 +23,10 @@ const getUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   try {
     const userId = req.params.id;
-    const { name, email, address, birthdate, nic, villageCode, serviceNo, mohBranch, password } = req.body;
+    const { 
+      name, email, address, birthdate, nic, villageCode, serviceNo, mohBranch, password,
+      firstName, lastName, phoneNumber, pregnancyStatus, dueDate, bloodGroup, emergencyContact
+    } = req.body;
     
     // Check if user exists
     const user = await User.findById(userId);
@@ -36,13 +39,21 @@ const updateUserProfile = async (req, res) => {
     
     // Only update fields that are provided
     if (name) updateData.name = name;
+    if (firstName) updateData.firstName = firstName;
+    if (lastName) updateData.lastName = lastName;
     if (email) updateData.email = email;
+    if (phoneNumber) updateData.phoneNumber = phoneNumber;
     if (address) updateData.address = address;
     if (birthdate) updateData.birthdate = birthdate;
+    if (pregnancyStatus) updateData.pregnancyStatus = pregnancyStatus;
+    if (dueDate) updateData.dueDate = dueDate;
+    if (bloodGroup) updateData.bloodGroup = bloodGroup;
+    if (emergencyContact) updateData.emergencyContact = emergencyContact;
     
     // Role-specific fields
-    if (user.role === 'mother' && villageCode) {
-      updateData.villageCode = villageCode;
+    if (user.role === 'mother') {
+      if (villageCode) updateData.villageCode = villageCode;
+      if (nic) updateData.nic = nic;
     }
     if (user.role === 'midwife') {
       if (serviceNo) updateData.serviceNo = serviceNo;
