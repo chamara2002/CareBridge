@@ -103,6 +103,17 @@ tbody tr:hover {
   color: white;
 }
 
+.newborn-badge {
+  display: inline-block;
+  background-color: #5D9CEC;
+  color: white;
+  font-size: 0.8em;
+  padding: 3px 8px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
 /* Action buttons */
 .btn-view {
   background-color: #4a89dc;

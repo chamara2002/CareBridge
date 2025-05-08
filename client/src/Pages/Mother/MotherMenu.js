@@ -6,6 +6,7 @@ import {
   FaUserAlt,
   FaBaby,
   FaWeight,
+  FaSyringe,
   FaBars 
 } from 'react-icons/fa';
 import '../Dashboard.css';
@@ -25,6 +26,7 @@ const MotherMenu = ({ children }) => {
           <li><FaHome /> {isOpen && <Link to="/Mother/MotherDashboard">Dashboard</Link>}</li>
           <li><FaUserAlt /> {isOpen && <Link to="/Mother/MotherDetails">Mother Details</Link>}</li>
           <li><FaWeight /> {isOpen && <Link to="/Mother/NewbornDetails">Newborn Details</Link>}</li>
+          <li><FaSyringe /> {isOpen && <Link to="/Mother/VaccineDetails">Vaccination Records</Link>}</li>
           <li><FaCalendarAlt /> {isOpen && <Link to="/appointmenthub">Appointments</Link>}</li>
         </ul>
       </div>

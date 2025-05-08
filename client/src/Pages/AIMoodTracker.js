@@ -61,21 +61,43 @@ const AIMoodTracker = () => {
   // Start webcam
   const startWebcam = async () => {
     try {
+      // Clear any previous errors
+      console.log("Requesting camera access...");
+      
+      // Request with specific dimensions to ensure better visibility
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: {
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+          facingMode: "user"
+        },
         audio: false
       });
+      
+      console.log("Camera access granted, setting up video element");
       
       if (webcamRef.current) {
         webcamRef.current.srcObject = stream;
         webcamRef.current.onloadedmetadata = () => {
+          console.log("Video metadata loaded, playing video");
           webcamRef.current.play();
           setIsWebcamActive(true);
         };
+      } else {
+        console.error("Webcam ref is not available");
+        alert("Could not initialize webcam. Please refresh the page and try again.");
       }
     } catch (error) {
       console.error("Error accessing webcam:", error);
-      alert("Could not access the webcam. Please make sure it's connected and permissions are granted.");
+      
+      // More user-friendly error message
+      if (error.name === 'NotAllowedError') {
+        alert("Camera access denied. Please allow camera access in your browser permissions and try again.");
+      } else if (error.name === 'NotFoundError') {
+        alert("No camera found. Please connect a camera and try again.");
+      } else {
+        alert("Could not access the webcam. Please make sure it's connected and permissions are granted.");
+      }
     }
   };
 
@@ -144,12 +166,18 @@ const AIMoodTracker = () => {
         // Calculate facial features
         const landmarks = face.scaledMesh;
         
-        // Get mouth points
-        const upperLip = landmarks[13];
-        const lowerLip = landmarks[14];
-        const mouthOpenness = Math.abs(upperLip[1] - lowerLip[1]);
+        // Get mouth points for measuring smile
+        const leftMouthCorner = landmarks[61];
+        const rightMouthCorner = landmarks[291];
+        const upperLipCenter = landmarks[13];
+        const lowerLipCenter = landmarks[14];
+        const mouthOpenness = Math.abs(upperLipCenter[1] - lowerLipCenter[1]);
         
-        // Get eye points for detecting squinting
+        // Calculate mouth curvature (smile detection)
+        const mouthMiddleY = (upperLipCenter[1] + lowerLipCenter[1]) / 2;
+        const mouthCurvature = mouthMiddleY - (leftMouthCorner[1] + rightMouthCorner[1]) / 2;
+        
+        // Get eye points for measuring openness
         const leftEyeTop = landmarks[159];
         const leftEyeBottom = landmarks[145];
         const rightEyeTop = landmarks[386];
@@ -160,26 +188,52 @@ const AIMoodTracker = () => {
           Math.abs(rightEyeTop[1] - rightEyeBottom[1])
         ) / 2;
         
-        // Improved mood detection algorithm
+        // Get eyebrow positions for detecting frowning
+        const leftEyebrow = landmarks[66];
+        const rightEyebrow = landmarks[296];
+        const leftEyebrowToEye = Math.abs(leftEyebrow[1] - leftEyeTop[1]);
+        const rightEyebrowToEye = Math.abs(rightEyebrow[1] - rightEyeTop[1]);
+        const eyebrowEyeDistance = (leftEyebrowToEye + rightEyebrowToEye) / 2;
+        
+        // Advanced mood detection algorithm with confidence scores
         let detectedMood;
-        if (mouthOpenness > 15 && eyeOpenness > 5) {
+        let confidence = 0;
+        
+        // Calculate happiness score based on smile and open eyes
+        const happinessScore = mouthCurvature * 3 + mouthOpenness * 0.5 + eyeOpenness * 0.3;
+        
+        // Calculate sadness score based on drooping mouth corners and lowered eyebrows
+        const sadnessScore = -mouthCurvature * 2 + (5 - eyebrowEyeDistance) * 0.5 + (5 - eyeOpenness) * 0.3;
+        
+        // Calculate neutral score as baseline
+        const neutralScore = 5 - Math.abs(mouthCurvature) * 0.5;
+        
+        console.log("Mood scores:", { happinessScore, sadnessScore, neutralScore });
+        
+        // Determine mood based on highest score
+        if (happinessScore > sadnessScore && happinessScore > neutralScore) {
           detectedMood = 'happy';
-        } else if (mouthOpenness < 5 && eyeOpenness < 3) {
+          confidence = Math.min(100, Math.round(happinessScore * 10));
+        } else if (sadnessScore > happinessScore && sadnessScore > neutralScore) {
           detectedMood = 'sad';
+          confidence = Math.min(100, Math.round(sadnessScore * 10));
         } else {
           detectedMood = 'neutral';
+          confidence = Math.min(100, Math.round(neutralScore * 15));
         }
         
+        console.log(`Detected mood: ${detectedMood} with ${confidence}% confidence`);
         setMood(detectedMood);
         
         // Use mood suggestions
         const suggestions = generateMoodSuggestions(detectedMood);
         
-        // Save to logs with suggestions
+        // Save to logs with suggestions and confidence
         const newLog = {
           date: new Date().toLocaleString(),
           type: 'facial',
           mood: detectedMood,
+          confidence: confidence,
           image: capturedImage,
           suggestions: suggestions
         };
@@ -428,11 +482,14 @@ const AIMoodTracker = () => {
         <h2>Facial Mood Analysis</h2>
         <div className="webcam-container">
           {!isWebcamActive ? (
-            <button onClick={startWebcam} className="action-btn primary-btn">
-              <span className="icon camera"></span> Start Webcam
-            </button>
+            <div className="webcam-placeholder">
+              <p>Enable your camera to analyze your facial expressions</p>
+              <button onClick={startWebcam} className="action-btn primary-btn">
+                <span className="icon camera"></span> Start Webcam
+              </button>
+            </div>
           ) : (
-            <>
+            <div className="active-webcam-container">
               <video 
                 ref={webcamRef} 
                 autoPlay 
@@ -448,7 +505,7 @@ const AIMoodTracker = () => {
                   <span className="icon stop"></span> Stop Webcam
                 </button>
               </div>
-            </>
+            </div>
           )}
           <canvas ref={canvasRef} style={{ display: 'none' }} />
         </div>
@@ -490,6 +547,11 @@ const AIMoodTracker = () => {
               {mood === 'happy' ? '😊' : mood === 'sad' ? '😔' : '😐'}
             </span>
             <span>Detected Mood: {mood.charAt(0).toUpperCase() + mood.slice(1)}</span>
+            {logs.length > 0 && logs[logs.length-1].confidence && (
+              <span className="confidence-indicator">
+                Confidence: {logs[logs.length-1].confidence}%
+              </span>
+            )}
           </div>
         )}
       </section>

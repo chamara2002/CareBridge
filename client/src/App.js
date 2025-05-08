@@ -18,9 +18,9 @@ import AIMoodTracker from './Pages/AIMoodTracker';
 import MotherDashboard from './Pages/Mother/MotherDashboard'; 
 import UserProfile from './Pages/UserProfile/UserProfile';
 import ManageAppointments from './Pages/AppointmentManagement/ManageAppointmentMidwife';
-import ViewMidwives from './Pages/Mother/ViewMidwives'; // Import the new component
 import MotherDetails from './Pages/Mother/MotherDetails'; // Import the new component
 import MotherNewborns from './Pages/Mother/MotherNewborns'; // Import the new component
+import NewbornVaccines from './Pages/Mother/NewbornVaccines'; // Import the new component
 
 const App = () => {
   const [user, setUser] = useState(null); // Track user login state
@@ -48,9 +48,9 @@ const App = () => {
         <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/AppointmentManagement" element={<ManageAppointments />} />
-        <Route path="/ViewMidwives" element={<ViewMidwives />} />
         <Route path="/Mother/MotherDetails" element={<MotherDetails />} /> {/* Add the new route */}
         <Route path="/Mother/NewbornDetails" element={<MotherNewborns />} /> {/* New route for mother's newborns */}
+        <Route path="/Mother/VaccineDetails" element={<NewbornVaccines />} />
       </Routes>
       <Footer />
     </Router>

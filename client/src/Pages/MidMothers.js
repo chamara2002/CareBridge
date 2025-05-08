@@ -10,10 +10,36 @@ const MothersManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMother, setSelectedMother] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [motherNewbornCounts, setMotherNewbornCounts] = useState({});
 
   useEffect(() => {
     fetchMothers();
   }, []);
+
+  useEffect(() => {
+    // Fetch newborn counts for each mother
+    const fetchNewbornCounts = async () => {
+      try {
+        // Only fetch if we have mothers loaded
+        if (mothers.length > 0) {
+          const counts = {};
+          
+          // For performance, we could create a separate API endpoint to get all counts at once
+          // But for now, we'll make individual requests
+          for (const mother of mothers) {
+            const response = await axios.get(`http://localhost:5000/api/midnewborns/mother/${mother._id}`);
+            counts[mother._id] = response.data.length;
+          }
+          
+          setMotherNewbornCounts(counts);
+        }
+      } catch (error) {
+        console.error('Error fetching newborn counts:', error);
+      }
+    };
+    
+    fetchNewbornCounts();
+  }, [mothers]);
 
   const fetchMothers = async () => {
     try {
@@ -83,6 +109,7 @@ const MothersManagement = () => {
                   <th>NIC</th>
                   <th>Village Code</th>
                   <th>Status</th>
+                  <th>Newborns</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -101,6 +128,11 @@ const MothersManagement = () => {
                         </span>
                       </td>
                       <td>
+                        <span className="newborn-badge">
+                          {motherNewbornCounts[mother._id] || 0} newborn(s)
+                        </span>
+                      </td>
+                      <td>
                         <button onClick={() => handleMotherClick(mother)} className="btn-view">
                           View Details
                         </button>
@@ -109,7 +141,7 @@ const MothersManagement = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="no-results">No mothers found matching your search.</td>
+                    <td colSpan="8" className="no-results">No mothers found matching your search.</td>
                   </tr>
                 )}
               </tbody>

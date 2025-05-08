@@ -1,111 +1,192 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import MotherMenu from './MotherMenu';
-import './MotherNewborns.css'; // Reusing the same CSS
+import MidMenu from './MotherMenu';
+import './NewbornVaccines.css';
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable';
 
-const NewbornVaccines = () => {
-  const { newbornId } = useParams();
+const MidVac = () => {
   const [vaccinations, setVaccinations] = useState([]);
-  const [newborn, setNewborn] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [newborns, setNewborns] = useState([]); // New state for storing newborns
+  const [searchTerm, setSearchTerm] = useState('');
+  const [formData, setFormData] = useState({
+    id: '',
+    newbornId: '',
+    vaccineName: '',
+    scheduledDate: '',
+    status: 'Scheduled',
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [errors, setErrors] = useState({});
 
+  // Fetch vaccinations
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchVaccinations = async () => {
       try {
-        setLoading(true);
-        
-        // Fetch the newborn details
-        const newbornResponse = await axios.get(`http://localhost:5000/api/midnewborns/${newbornId}`);
-        setNewborn(newbornResponse.data);
-        
-        // Fetch vaccinations for this newborn
-        const vaccinationsResponse = await axios.get(`http://localhost:5000/api/midvac/newborn/${newbornId}`);
-        setVaccinations(vaccinationsResponse.data);
-        
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError('Failed to load vaccination records. Please try again later.');
-        setLoading(false);
+        const response = await axios.get('http://localhost:5000/api/midvac');
+        setVaccinations(response.data);
+      } catch (error) {
+        console.error('Error fetching vaccinations:', error);
       }
     };
+    fetchVaccinations();
+  }, []);
 
-    if (newbornId) {
-      fetchData();
+  // Fetch newborns to populate the select dropdown
+  useEffect(() => {
+    const fetchNewborns = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/midnewborns');
+        setNewborns(response.data); // Assuming this API returns an array of newborns
+      } catch (error) {
+        console.error('Error fetching newborns:', error);
+      }
+    };
+    fetchNewborns();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    const { newbornId, vaccineName, scheduledDate } = formData;
+    
+    if (!newbornId) newErrors.newbornId = 'Newborn ID is required';
+    if (!vaccineName) newErrors.vaccineName = 'Vaccine name is required';
+    if (!scheduledDate) newErrors.scheduledDate = 'Vaccination date is required';
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+      if (isEditing) {
+        await axios.put(`http://localhost:5000/api/midvac/${formData.id}`, formData);
+        setVaccinations(vaccinations.map((vac) => vac.id === formData.id ? formData : vac));
+      } else {
+        const response = await axios.post('http://localhost:5000/api/midvac', formData);
+        setVaccinations([...vaccinations, response.data]);
+      }
+      resetForm();
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error saving vaccination:', error);
     }
-  }, [newbornId]);
+  };
+
+  const resetForm = () => {
+    setFormData({
+      id: '',
+      newbornId: '',
+      vaccineName: '',
+      scheduledDate: '',
+      status: 'Scheduled',
+    });
+    setIsEditing(false);
+    setErrors({});
+  };
+
+  const filteredVaccinations = vaccinations.filter(vac => 
+    vac.newbornId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    vac.vaccineName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <MotherMenu>
-      <div className="mother-newborn-management">
-        <h2>Vaccination Records</h2>
-        
-        {loading ? (
-          <div className="loading-message">Loading vaccination data...</div>
-        ) : error ? (
-          <div className="error-message">{error}</div>
-        ) : (
-          <>
-            {newborn && (
-              <div className="newborn-details-header">
-                <h3>{newborn.name}'s Vaccination Records</h3>
-                <div className="newborn-summary">
-                  <p><strong>Birth Date:</strong> {new Date(newborn.birthDate).toLocaleDateString()}</p>
-                  <p><strong>Health Status:</strong> 
-                    <span className={`status-badge status-${newborn.healthStatus.toLowerCase().replace(' ', '-')}`}>
-                      {newborn.healthStatus}
-                    </span>
-                  </p>
-                </div>
+    <MidMenu>
+      <div className="vaccination-management">
+        <h2>Vaccination Arrangement</h2>
+        <div className="top-controls">
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search by newborn or vaccine name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+        </div>
+
+        {showForm && (
+          <div className="vaccination-form">
+            <h3>{isEditing ? 'Edit Vaccination' : 'Add Vaccination'}</h3>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Newborn ID:</label>
+                <select
+                  name="newbornId"
+                  value={formData.newbornId}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="">Select Newborn</option>
+                  {newborns.map((newborn) => (
+                    <option key={newborn._id} value={newborn._id}>
+                      {newborn.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.newbornId && <div className="error">{errors.newbornId}</div>}
               </div>
-            )}
-
-            <div className="vaccination-records">
-              {vaccinations.length > 0 ? (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Vaccine Name</th>
-                      <th>Scheduled Date</th>
-                      <th>Status</th>
-                      <th>Notes</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {vaccinations.map((vaccine) => (
-                      <tr key={vaccine._id} className={`status-${vaccine.status.toLowerCase()}`}>
-                        <td>{vaccine.vaccineName}</td>
-                        <td>{new Date(vaccine.scheduledDate).toLocaleDateString()}</td>
-                        <td>
-                          <span className={`status-badge status-${vaccine.status.toLowerCase()}`}>
-                            {vaccine.status}
-                          </span>
-                        </td>
-                        <td>{vaccine.notes || 'No notes'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="no-data-message">
-                  <p>No vaccination records found for this newborn.</p>
-                  <p>Your midwife will add vaccinations during checkups.</p>
-                </div>
-              )}
-            </div>
-
-            <div className="back-button-container">
-              <a href="/mother/newborndetails" className="btn-secondary">
-                Back to Newborns
-              </a>
-            </div>
-          </>
+              <div className="form-group">
+                <label>Vaccine Name:</label>
+                <input type="text" name="vaccineName" value={formData.vaccineName} onChange={handleInputChange} required />
+                {errors.vaccineName && <div className="error">{errors.vaccineName}</div>}
+              </div>
+              <div className="form-group">
+                <label>Vaccination Date:</label>
+                <input type="date" name="scheduledDate" value={formData.scheduledDate} onChange={handleInputChange} required />
+                {errors.scheduledDate && <div className="error">{errors.scheduledDate}</div>}
+              </div>
+              <div className="form-group">
+                <label>Status:</label>
+                <select name="status" value={formData.status} onChange={handleInputChange}>
+                  <option value="Scheduled">Scheduled</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Missed">Missed</option>
+                </select>
+              </div>
+              <div className="form-actions">
+                <button type="submit" className="btn-primary">{isEditing ? 'Update' : 'Add'}</button>
+                <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">Cancel</button>
+              </div>
+            </form>
+          </div>
         )}
+
+        <div className="vaccination-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Newborn ID</th>
+                <th>Vaccine Name</th>
+                <th>Vaccination Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredVaccinations.map((vac) => (
+                <tr key={vac._id} className={`status-${vac.status.toLowerCase()}`}>
+                  <td>{vac.newbornId ? vac.newbornId.name : 'No Name'}</td>
+                  <td>{vac.vaccineName}</td>
+                  <td>{new Date(vac.scheduledDate).toLocaleDateString()}</td>
+                  <td>{vac.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </MotherMenu>
+    </MidMenu>
   );
 };
 
-export default NewbornVaccines;
+export default MidVac;

@@ -69,12 +69,12 @@
     border-bottom: 2px solid #f0f0f0;
   }
   
-  /* Webcam */
+  /* Improved webcam container styles */
   .webcam-container {
     position: relative;
     margin-bottom: 20px;
     text-align: center;
-    min-height: 200px;
+    min-height: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -82,21 +82,49 @@
     background-color: #f8f9fa;
     border-radius: 8px;
     border: 2px dashed #e0e0e0;
+    overflow: hidden;
+    padding: 15px;
+  }
+
+  .active-webcam-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .webcam-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 30px;
+  }
+  
+  .webcam-placeholder p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
   }
   
   .webcam-video {
     width: 100%;
-    max-width: 500px;
+    max-width: 640px;
     border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: #000;
+    height: auto;
+    aspect-ratio: 4/3;
+    object-fit: cover;
   }
   
   .webcam-controls {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 15px;
     margin-top: 15px;
+    width: 100%;
   }
   
   /* Buttons */
@@ -294,264 +322,7 @@
     margin-top: 15px;
     font-weight: 600;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .mood-result.happy, 
-  .text-result.positive {
-    background: rgba(46, 204, 113, 0.15);
-    color: #27ae60;
-    border-left: 4px solid #27ae60;
-  }
-  
-  .mood-result.sad, 
-  .text-result.negative {
-    background: rgba(231, 76, 60, 0.15);
-    color: #c0392b;
-    border-left: 4px solid #c0392b;
-  }
-  
-  .mood-result.neutral, 
-  .text-result.neutral {
-    background: rgba(241, 196, 15, 0.15);
-    color: #f39c12;
-    border-left: 4px solid #f39c12;
-  }
-  
-  /* Text Input */
-  .text-input {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 1rem;
-    resize: vertical;
-    transition: border-color 0.2s ease;
-  }
-  
-  .text-input:focus {
-    border-color: #4a89dc;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(74, 137, 220, 0.1);
-  }
-  
-  /* Wellness Metrics */
-  .wellness-metrics {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-    margin-top: 20px;
-  }
-  
-  .metric/* AI Mood Tracker Styles */
-  .ai-mood-tracker {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 30px;
-    font-family: 'Open Sans', 'Segoe UI', sans-serif;
-    color: #333;
-    background-color: #f9f9f9;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  }
-  
-  /* Header */
-  header {
-    text-align: center;
-    margin-bottom: 40px;
-    position: relative;
-  }
-  
-  header h1 {
-    color: #3a6ac2;
-    font-size: 2.8rem;
-    margin-bottom: 0.8rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    position: relative;
-    display: inline-block;
-  }
-  
-  header h1::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
-    background: linear-gradient(90deg, #4a89dc, #5d9cec);
-    border-radius: 2px;
-  }
-  
-  .tagline {
-    color: #7f8c8d;
-    font-size: 1.2rem;
-    font-weight: 300;
-    margin-top: 15px;
-  }
-  
-  /* Sections */
-  .tracker-section {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-  }
-  
-  .tracker-section:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    transform: translateY(-3px);
-  }
-  
-  .tracker-section h2 {
-    color: #2c3e50;
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #f0f0f0;
-  }
-  
-  /* Webcam */
-  .webcam-container {
-    position: relative;
-    margin-bottom: 20px;
-    text-align: center;
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border: 2px dashed #e0e0e0;
-  }
-  
-  .webcam-video {
-    width: 100%;
-    max-width: 500px;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Buttons */
-  .action-btn {
-    background: #4a89dc;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    margin: 15px 5px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 6px rgba(74, 137, 220, 0.2);
-    min-width: 160px;
-  }
-  
-  .action-btn:hover {
-    background: #3a70c2;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(74, 137, 220, 0.3);
-  }
-  
-  .action-btn:active {
-    transform: translateY(1px);
-  }
-  
-  .primary-btn {
-    background: #3a6ac2;
-  }
-  
-  .capture-btn {
-    background: #4a89dc;
-  }
-  
-  .analyze-btn {
-    background: #5d9cec;
-  }
-  
-  .download-btn {
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
-    box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
-  }
-  
-  .download-btn:hover {
-    background: linear-gradient(135deg, #27ae60, #219653);
-    box-shadow: 0 6px 10px rgba(46, 204, 113, 0.3);
-  }
-  
-  /* Icons */
-  .icon {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-  
-  .icon.camera::before {
-    content: "📷";
-  }
-  
-  .icon.analyze::before {
-    content: "🔍";
-  }
-  
-  .icon.download::before {
-    content: "📥";
-  }
-  
-  .icon.mood-happy::before,
-  .icon.mood-positive::before {
-    content: "😊";
-  }
-  
-  .icon.mood-sad::before,
-  .icon.mood-negative::before {
-    content: "😔";
-  }
-  
-  .icon.mood-neutral::before {
-    content: "😐";
-  }
-  
-  /* Analysis Panel */
-  .analysis-panel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 15px 0;
-  }
-  
-  .preview-image {
-    max-width: 300px;
-    border-radius: 10px;
-    margin: 10px 0;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    border: 4px solid white;
-  }
-  
-  /* Mood Results */
-  .mood-result, .text-result {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    border-radius: 30px;
-    margin-top: 15px;
-    font-weight: 600;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap;
   }
   
   .mood-result.happy, 
@@ -732,4 +503,15 @@
       grid-template-columns: 1fr;
       gap: 15px;
     }
+  }
+  
+  /* Add confidence indicator styling */
+  .confidence-indicator {
+    display: inline-block;
+    margin-left: 15px;
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    color: inherit;
   }
