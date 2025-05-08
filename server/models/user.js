@@ -11,7 +11,34 @@ const userSchema = new mongoose.Schema(
     address: String,
     birthdate: Date,
     serviceNo: String,    
-    mohBranch: String,    
+    mohBranch: String,
+    
+    // Additional fields for mother profile
+    firstName: String,
+    lastName: String,
+    phoneNumber: String,
+    pregnancyStatus: {
+      type: String,
+      enum: ['Unknown', 'Pregnant', 'Postpartum'],
+      default: 'Unknown'
+    },
+    dueDate: Date,
+    bloodGroup: String,
+    
+    // Husband/Partner details
+    husbandDetails: {
+      name: String,
+      phoneNumber: String,
+      occupation: String,
+      nic: String
+    },
+    
+    // Emergency contact
+    emergencyContact: {
+      name: String,
+      phone: String,
+      relationship: String
+    }
   },
   { timestamps: true }
 );

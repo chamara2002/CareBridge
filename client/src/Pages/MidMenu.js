@@ -1,7 +1,7 @@
 // MidMenu.js
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaHome, FaCalendarAlt, FaEnvelope, FaUserMd, FaCog, FaBars, FaUsers, FaBabyCarriage, FaSyringe } from 'react-icons/fa';
+import { FaHome, FaCalendarAlt, FaBars, FaUsers, FaBabyCarriage, FaSyringe } from 'react-icons/fa';
 import './Dashboard.css';
 
 const MidMenu = ({ children }) => {
@@ -22,9 +22,6 @@ const MidMenu = ({ children }) => {
           <li><FaBabyCarriage /> <Link to="/MidNewborns">Newborn Management</Link></li>
           <li><FaSyringe /> <Link to="/MidVac">Newborn Vaccination</Link></li> 
           <li><FaCalendarAlt /> {isOpen && <Link to="/AppointmentManagement">Appointments</Link>}</li>
-          <li><FaEnvelope /> {isOpen && 'Messages'}</li>
-          <li><FaUserMd /> {isOpen && 'Midwife Directory'}</li>
-          <li><FaCog /> {isOpen && 'Settings'}</li>
         </ul>
       </div>
 
