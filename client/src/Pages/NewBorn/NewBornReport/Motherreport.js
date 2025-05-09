@@ -95,5 +95,3 @@ const Motherreport = () => {
     </div>
   );
 };
-
-export default Motherreport;
