@@ -116,23 +116,23 @@ th {
 }
 
 .status-completed {
-    background-color: #b4cf97 !important; /* Light green */
-    color: white;
+    background-color: #c3d8ac !important; /* Light green */
+    color: rgb(0, 0, 0) !important;
 }
 
 .status-overdue {
-    background-color: #eb6e7b; /* Light red */
-    color: white;
+    background-color: #cc949a; /* Light red */
+    color: white ;
 }
 
 .status-missed {
-    background-color: #fca9a9 !important; /* Light red */
-    color: white;
+    background-color: #f6a3a3 !important; /* Light red */
+    color: rgb(0, 0, 0) !important;
 }
 
 .status-scheduled {
-    background-color: #ffe6ab !important; /* Light yellow */
-    color: #333; /* Dark text for contrast */
+    background-color: #f4e1a8 !important; /* Light yellow */
+    color: #000000 !important; /* Dark text for contrast */
 }
 
 tr.status-overdue {

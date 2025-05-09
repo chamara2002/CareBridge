@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import HomePage from './Pages/HomePage';
 import Dashboard from './Pages/Dashboard';
 import MothersManagement from './Pages/MidMothers';
@@ -18,24 +18,55 @@ import AIMoodTracker from './Pages/AIMoodTracker';
 import MotherDashboard from './Pages/Mother/MotherDashboard'; 
 import UserProfile from './Pages/UserProfile/UserProfile';
 import ManageAppointments from './Pages/AppointmentManagement/ManageAppointmentMidwife';
-import MotherDetails from './Pages/Mother/MotherDetails'; // Import the new component
-import MotherNewborns from './Pages/Mother/MotherNewborns'; // Import the new component
-import NewbornVaccines from './Pages/Mother/NewbornVaccines'; // Import the new component
+import MotherDetails from './Pages/Mother/MotherDetails';
+import MotherNewborns from './Pages/Mother/MotherNewborns';
+import NewbornVaccines from './Pages/Mother/NewbornVaccines';
+import AdminDashboard from './Pages/AdminDashboard'; // Import the new component
+import { AuthProvider } from './context/AuthContext';
 
-
-
-import AddMother from './Pages/NewBorn/NewBoarnForm/AddMother';
-import MotherHome from './Pages/NewBorn/NewbornHome/MotherHome';
-import Motherreport from './Pages/NewBorn/NewBornReport/Motherreport';
-import UpdateMother from './Pages/NewBorn/Updatenewborn/UpdateMother';
-import ViewMother from './Pages/NewBorn/viewSingleBron/ViewMother';
-import ViewAllMother from './Pages/NewBorn/viewAllNewborn/ViewAllMother';
+// Protected route component for role-based access
+const ProtectedRoute = ({ element, allowedRoles }) => {
+  const token = localStorage.getItem('token');
+  const userRole = localStorage.getItem('userRole');
+  
+  if (!token) {
+    return <Navigate to="/SignIn" replace />;
+  }
+  
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
+    // Redirect to appropriate dashboard based on role
+    if (userRole === 'mother') {
+      return <Navigate to="/Mother/MotherDashboard" replace />;
+    } else if (userRole === 'midwife') {
+      return <Navigate to="/dashboard" replace />;
+    } else if (userRole === 'admin') {
+      return <Navigate to="/admin-dashboard" replace />;
+    }
+    return <Navigate to="/" replace />;
+  }
+  
+  return element;
+};
 
 const App = () => {
-  const [user, setUser] = useState(null); // Track user login state
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const login = () => setUser(true); // Simulate login
-  const logout = () => setUser(null); // Simulate logout
+  useEffect(() => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    if (token) {
+      setUser(true);
+    }
+    setIsLoading(false);
+  }, []);
+
+  const login = () => setUser(true);
+  const logout = () => setUser(null);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Router>
@@ -54,16 +85,6 @@ const App = () => {
         <Route path="/Service" element={<Service />} />
         <Route path="/Contact" element={<Contact />} />
         <Route path="/AIMoodTracker" element={<AIMoodTracker />} /> 
-
-        
-      <Route path="/rr" element={<HomePage />} />
-      <Route path="/mother-home" element={<MotherHome />} />
-      <Route path="/AddMother" element={<AddMother />} />
-      <Route path="/ViewAllMother" element={<ViewAllMother />} />
-      <Route path="/update/:motherId" element={<UpdateMother />} />
-      <Route path="/view-single/:motherId" element={<ViewMother/>} />
-      <Route path="/report-generation" element={<Motherreport/>} />
-        <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />   
         <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/AppointmentManagement" element={<ManageAppointments />} />

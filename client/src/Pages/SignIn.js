@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import "./SignIn.css";
 
 const SignIn = () => {
@@ -7,6 +8,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("mother");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,11 +25,20 @@ const SignIn = () => {
         if (!response.ok) throw new Error(data.message || "Login failed");
 
         if (data.token) {
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("userRole", role); // Store role
+          // Use the context login function instead of directly setting localStorage
+          login(data.token, role);
           alert("Login successful");
 
-          navigate("/dashboard");
+          // Redirect based on user role
+          if (role === "mother") {
+            navigate("/Mother/MotherDashboard");
+          } else if (role === "midwife") {
+            navigate("/dashboard");
+          } else if (role === "admin") {
+            navigate("/admin-dashboard");
+          } else {
+            navigate("/dashboard"); // Default fallback
+          }
         } else {
           alert("Login failed: No token received");
         }
