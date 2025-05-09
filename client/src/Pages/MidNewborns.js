@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import MidMenu from './MidMenu';
 import './MidNewborns.css';
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable';
 
 const NewbornManagement = () => {
   const [newborns, setNewborns] = useState([]);
@@ -17,6 +19,8 @@ const NewbornManagement = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [errors, setErrors] = useState({}); // To store form validation errors
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredNewborns, setFilteredNewborns] = useState([]);
 
   // Fetch data from the backend
   useEffect(() => {
@@ -141,15 +145,72 @@ const NewbornManagement = () => {
     setShowForm(false); // Hide the form when cancel is clicked
   };
 
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(18);
+    doc.text('Newborn Records Report', 14, 20);
+    doc.setFontSize(12);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
+
+    // Create table data
+    const tableData = newborns.map(newborn => [
+      newborn.name,
+      formatDateForInput(newborn.birthDate),
+      `${newborn.weight} kg`,
+      `${newborn.height} cm`,
+      `${newborn.headCircumference} cm`,
+      newborn.healthStatus
+    ]);
+
+    // Add table using autoTable
+    autoTable(doc, {
+      head: [['Name', 'Birth Date', 'Weight', 'Height', 'Head Circ.', 'Status']],
+      body: tableData,
+      startY: 40,
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [41, 128, 185] }
+    });
+
+    // Save PDF
+    doc.save('newborn-records.pdf');
+  };
+
+  // Add search functionality
+  useEffect(() => {
+    const results = newborns.filter(newborn =>
+      newborn.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      newborn.healthStatus.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredNewborns(results);
+  }, [searchTerm, newborns]);
+
   return (
     <MidMenu>
       <div className="newborn-management">
         <h2>Newborn Management</h2>
 
-        {/* Button to add a new newborn */}
-        <button onClick={handleAddNewborn} className="btn-primary">
-          Add Newborn
-        </button>
+        <div className="top-controls">
+          <div className="action-buttons">
+            <button onClick={handleAddNewborn} className="btn-primary">
+              Add Newborn
+            </button>
+            <button onClick={generatePDF} className="btn-secondary">
+              Generate PDF
+            </button>
+          </div>
+          
+          <div className="search-container">
+            <input
+              type="text"
+              placeholder="Search by name or health status..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
+        </div>
 
         {/* Newborn Form - Only shows if adding or editing a newborn */}
         {showForm && (
@@ -257,7 +318,7 @@ const NewbornManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {newborns.map((newborn) => (
+              {filteredNewborns.map((newborn) => (
                 <tr key={newborn._id} className={`status-${newborn.healthStatus.toLowerCase().replace(' ', '-')}`}>
                   <td>{newborn.name}</td>
                   <td>{formatDateForInput(newborn.birthDate)}</td>

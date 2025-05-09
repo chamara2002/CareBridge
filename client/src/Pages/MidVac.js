@@ -20,18 +20,23 @@ const MidVac = () => {
   const [showForm, setShowForm] = useState(false);
   const [errors, setErrors] = useState({});
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
+  const [statusFilter, setStatusFilter] = useState('all');
+
   // Fetch vaccinations
   useEffect(() => {
-    const fetchVaccinations = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/midvac');
-        setVaccinations(response.data);
-      } catch (error) {
-        console.error('Error fetching vaccinations:', error);
-      }
-    };
     fetchVaccinations();
   }, []);
+
+  const fetchVaccinations = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/midvac');
+      setVaccinations(response.data);
+    } catch (error) {
+      console.error('Error fetching vaccinations:', error);
+    }
+  };
 
   // Fetch newborns to populate the select dropdown
   useEffect(() => {
@@ -70,13 +75,13 @@ const MidVac = () => {
     try {
       if (isEditing) {
         await axios.put(`http://localhost:5000/api/midvac/${formData.id}`, formData);
-        setVaccinations(vaccinations.map((vac) => vac.id === formData.id ? formData : vac));
       } else {
-        const response = await axios.post('http://localhost:5000/api/midvac', formData);
-        setVaccinations([...vaccinations, response.data]);
+        await axios.post('http://localhost:5000/api/midvac', formData);
       }
       resetForm();
       setShowForm(false);
+      // Fetch fresh data after submission
+      await fetchVaccinations();
     } catch (error) {
       console.error('Error saving vaccination:', error);
     }
@@ -87,7 +92,7 @@ const MidVac = () => {
       id: vaccination._id, // Ensure we're using _id from API
       newbornId: vaccination.newbornId._id, // Using newborn's _id
       vaccineName: vaccination.vaccineName,
-      scheduledDate: vaccination.scheduledDate,
+      scheduledDate: vaccination.scheduledDate.split('T')[0],
       status: vaccination.status,
     });
     setIsEditing(true);
@@ -95,57 +100,148 @@ const MidVac = () => {
   };
 
   const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/midvac/${id}`);
-      setVaccinations(vaccinations.filter((vac) => vac._id !== id)); // Ensure you're using _id for deletion
-    } catch (error) {
-      console.error('Error deleting vaccination:', error);
+    if (window.confirm('Are you sure you want to delete this vaccination record?')) {
+      try {
+        await axios.delete(`http://localhost:5000/api/midvac/${id}`);
+        // Fetch fresh data after deletion
+        await fetchVaccinations();
+      } catch (error) {
+        console.error('Error deleting vaccination:', error);
+      }
     }
   };
 
   const resetForm = () => {
+    const today = new Date().toISOString().split('T')[0];
     setFormData({
       id: '',
       newbornId: '',
       vaccineName: '',
-      scheduledDate: '',
+      scheduledDate: today,
       status: 'Scheduled',
     });
     setIsEditing(false);
     setErrors({});
   };
 
-  const filteredVaccinations = vaccinations.filter(vac => 
-    vac.newbornId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    vac.vaccineName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredVaccinations = vaccinations.filter(vac => {
+    const matchesSearch = (
+      vac.newbornId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      vac.vaccineName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const matchesStatus = statusFilter === 'all' || vac.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredVaccinations.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredVaccinations.length / itemsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const generatePDF = () => {
-    const doc = new jsPDF();
-    
-    // Add title
-    doc.setFontSize(18);
-    doc.text('Vaccination Records', 14, 22);
-    doc.setFontSize(11);
-    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
-
-    const tableColumn = ["Newborn Name", "Vaccine Name", "Vaccination Date", "Status"];
-    const tableRows = filteredVaccinations.map(vac => [
-      vac.newbornId ? vac.newbornId.name : 'No Name',
-      vac.vaccineName,
-      new Date(vac.scheduledDate).toLocaleDateString(),
-      vac.status
-    ]);
-
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows,
-      startY: 40,
-      styles: { fontSize: 10 },
-      headStyles: { fillColor: [74, 137, 220] }
-    });
-
-    doc.save("vaccination-records.pdf");
+    try {
+      const doc = new jsPDF();
+      
+      // Add header
+      doc.setFillColor(41, 128, 185);
+      doc.rect(0, 0, doc.internal.pageSize.width, 40, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(24);
+      doc.text('CareBridge', 14, 20);
+      doc.setFontSize(14);
+      doc.text('Vaccination Records Report', 14, 32);
+  
+      // Reset text color
+      doc.setTextColor(0, 0, 0);
+      
+      // Add report info
+      doc.setFontSize(11);
+      doc.text(`Generated Date: ${new Date().toLocaleDateString()}`, 14, 50);
+      doc.text(`Total Records: ${vaccinations.length}`, 14, 58);
+      doc.text(`Filtered Status: ${statusFilter === 'all' ? 'All' : statusFilter}`, 14, 66);
+  
+      const tableColumns = [
+        "Newborn Name", 
+        "Vaccine Name", 
+        "Vaccination Date", 
+        "Status",
+        "Notes"
+      ];
+      
+      const tableRows = vaccinations.map(vac => [
+        vac.newbornId?.name || 'N/A',
+        vac.vaccineName,
+        new Date(vac.scheduledDate).toLocaleDateString(),
+        vac.status,
+        getStatusNote(vac.status)
+      ]);
+  
+      // Add table
+      autoTable(doc, {
+        head: [tableColumns],
+        body: tableRows,
+        startY: 75,
+        styles: { 
+          fontSize: 10,
+          cellPadding: 5
+        },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          fontStyle: 'bold'
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245]
+        },
+        columnStyles: {
+          0: { cellWidth: 40 },
+          1: { cellWidth: 40 },
+          2: { cellWidth: 35 },
+          3: { cellWidth: 25 },
+          4: { cellWidth: 40 }
+        },
+        didDrawPage: function(data) {
+          // Add footer on each page
+          const pageSize = doc.internal.pageSize;
+          const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+          doc.setFontSize(8);
+          doc.text(
+            `Page ${doc.internal.getNumberOfPages()}`,
+            data.settings.margin.left,
+            pageHeight - 10
+          );
+          doc.text(
+            `CareBridge Healthcare - Confidential Document`,
+            pageSize.width / 2,
+            pageHeight - 10,
+            { align: 'center' }
+          );
+        }
+      });
+  
+      // Save with a formatted filename
+      const filename = `CareBridge_Vaccination_Records_${new Date().toISOString().split('T')[0]}.pdf`;
+      doc.save(filename);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    }
+  };
+  
+  const getStatusNote = (status) => {
+    switch(status) {
+      case 'Completed':
+        return 'Vaccination successfully administered';
+      case 'Scheduled':
+        return 'Pending administration';
+      case 'Missed':
+        return 'Requires rescheduling';
+      default:
+        return '';
+    }
   };
 
   return (
@@ -153,14 +249,26 @@ const MidVac = () => {
       <div className="vaccination-management">
         <h2>Newborn Vaccination Management</h2>
         <div className="top-controls">
-          <div className="search-container">
-            <input
-              type="text"
-              placeholder="Search by newborn or vaccine name..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
+          <div className="filter-container">
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Search by newborn or vaccine name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </div>
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="status-filter"
+            >
+              <option value="all">All Status</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Completed">Completed</option>
+              <option value="Missed">Missed</option>
+            </select>
           </div>
           <div className="button-container">
             <button onClick={() => setShowForm(true)} className="btn-primary">Add Vaccination</button>
@@ -220,7 +328,7 @@ const MidVac = () => {
           <table>
             <thead>
               <tr>
-                <th>Newborn ID</th>
+                <th>Newborn Name</th>
                 <th>Vaccine Name</th>
                 <th>Vaccination Date</th>
                 <th>Status</th>
@@ -228,7 +336,7 @@ const MidVac = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredVaccinations.map((vac) => (
+              {currentItems.map((vac) => (
                 <tr key={vac._id} className={`status-${vac.status.toLowerCase()}`}>
                   <td>{vac.newbornId ? vac.newbornId.name : 'No Name'}</td>
                   <td>{vac.vaccineName}</td>
@@ -242,6 +350,27 @@ const MidVac = () => {
               ))}
             </tbody>
           </table>
+          
+          {/* Add pagination controls */}
+          <div className="pagination">
+            <button 
+              onClick={() => paginate(currentPage - 1)} 
+              disabled={currentPage === 1}
+              className="btn-page"
+            >
+              Previous
+            </button>
+            <span className="page-info">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button 
+              onClick={() => paginate(currentPage + 1)} 
+              disabled={currentPage === totalPages}
+              className="btn-page"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </MidMenu>
