@@ -257,6 +257,10 @@
     background-repeat: no-repeat;
     background-position: center;
   }
+
+  .icon.auto::before {
+    content: "✨";
+  }
   
   .icon.camera::before {
     content: "📷";
