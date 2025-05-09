@@ -151,10 +151,11 @@ tr.status-pending {
 
 .search-container {
   margin-bottom: 20px;
+  height: 15px;
 }
 
 .search-input {
-  width: 100%;
+  width: 100px;
   max-width: 300px;
   padding: 8px 12px;
   border: 1px solid #ddd;
@@ -191,4 +192,52 @@ tr.status-pending {
 
 .btn-export:hover {
   background: #218838;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 15px;
+}
+
+.btn-page {
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-page:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 14px;
+  color: #666;
+}
+
+.filter-container {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.status-filter {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 150px;
+  background-color: white;
+  margin-bottom: 20px;
+}
+
+.status-filter:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
 }
