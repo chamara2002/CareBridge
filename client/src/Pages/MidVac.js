@@ -54,15 +54,60 @@ const MidVac = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    
+    // Clear error when field is edited
+    if (errors[name]) {
+      setErrors({...errors, [name]: ''});
+    }
+  };
+
+  // Utility function to check if date is valid
+  const isValidDate = (dateString) => {
+    const date = new Date(dateString);
+    return !isNaN(date.getTime());
+  };
+
+  // Utility function to check if date is in the past
+  const isPastDate = (dateString) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const date = new Date(dateString);
+    return date < today;
+  };
+
+  // Utility function to check if string contains only letters and spaces
+  const isAlphaSpace = (str) => {
+    return /^[A-Za-z\s]+$/.test(str);
   };
 
   const validateForm = () => {
     const newErrors = {};
     const { newbornId, vaccineName, scheduledDate } = formData;
     
-    if (!newbornId) newErrors.newbornId = 'Newborn ID is required';
-    if (!vaccineName) newErrors.vaccineName = 'Vaccine name is required';
-    if (!scheduledDate) newErrors.scheduledDate = 'Vaccination date is required';
+    // Validate newbornId
+    if (!newbornId) {
+      newErrors.newbornId = 'Newborn ID is required';
+    }
+    
+    // Validate vaccineName
+    if (!vaccineName) {
+      newErrors.vaccineName = 'Vaccine name is required';
+    } else if (!isAlphaSpace(vaccineName)) {
+      newErrors.vaccineName = 'Vaccine name should contain only letters and spaces';
+    } else if (vaccineName.length < 2) {
+      newErrors.vaccineName = 'Vaccine name should be at least 2 characters';
+    } else if (vaccineName.length > 50) {
+      newErrors.vaccineName = 'Vaccine name should not exceed 50 characters';
+    }
+    
+    // Validate scheduledDate
+    if (!scheduledDate) {
+      newErrors.scheduledDate = 'Vaccination date is required';
+    } else if (!isValidDate(scheduledDate)) {
+      newErrors.scheduledDate = 'Please enter a valid date';
+    } else if (isPastDate(scheduledDate) && !isEditing) {
+      newErrors.scheduledDate = 'Vaccination date cannot be in the past';
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -286,7 +331,7 @@ const MidVac = () => {
                   name="newbornId"
                   value={formData.newbornId}
                   onChange={handleInputChange}
-                  required
+                  className={errors.newbornId ? "input-error" : ""}
                 >
                   <option value="">Select Newborn</option>
                   {newborns.map((newborn) => (
@@ -299,12 +344,24 @@ const MidVac = () => {
               </div>
               <div className="form-group">
                 <label>Vaccine Name:</label>
-                <input type="text" name="vaccineName" value={formData.vaccineName} onChange={handleInputChange} required />
+                <input 
+                  type="text" 
+                  name="vaccineName" 
+                  value={formData.vaccineName} 
+                  onChange={handleInputChange} 
+                  className={errors.vaccineName ? "input-error" : ""}
+                />
                 {errors.vaccineName && <div className="error">{errors.vaccineName}</div>}
               </div>
               <div className="form-group">
                 <label>Vaccination Date:</label>
-                <input type="date" name="scheduledDate" value={formData.scheduledDate} onChange={handleInputChange} required />
+                <input 
+                  type="date" 
+                  name="scheduledDate" 
+                  value={formData.scheduledDate} 
+                  onChange={handleInputChange} 
+                  className={errors.scheduledDate ? "input-error" : ""}
+                />
                 {errors.scheduledDate && <div className="error">{errors.scheduledDate}</div>}
               </div>
               <div className="form-group">

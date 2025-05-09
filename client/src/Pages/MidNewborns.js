@@ -44,10 +44,16 @@ const NewbornManagement = () => {
   // Form validation function
   const validateForm = () => {
     const newErrors = {};
-    const { name, birthDate, weight, height } = formData;
+    const { name, birthDate, weight, height, headCircumference } = formData;
 
-    // Name: Cannot be empty
-    if (!name) newErrors.name = 'Name is required';
+    // Name: Cannot be empty and should have at least 2 characters
+    if (!name) {
+      newErrors.name = 'Name is required';
+    } else if (name.length < 2) {
+      newErrors.name = 'Name should be at least 2 characters long';
+    } else if (!/^[a-zA-Z\s.'-]+$/.test(name)) {
+      newErrors.name = 'Name should contain only letters, spaces, and common punctuation';
+    }
 
     // BirthDate: Cannot be empty and cannot be in the future
     if (!birthDate) {
@@ -63,6 +69,13 @@ const NewbornManagement = () => {
     // Height: Cannot be empty and should be a positive number
     if (!height) newErrors.height = 'Height is required';
     else if (isNaN(height) || Number(height) <= 0) newErrors.height = 'Height must be a positive number';
+
+    // Head Circumference: Should be a positive number if provided
+    if (headCircumference && (isNaN(headCircumference) || Number(headCircumference) <= 0)) {
+      newErrors.headCircumference = 'Head circumference must be a positive number';
+    } else if (headCircumference && Number(headCircumference) > 60) {
+      newErrors.headCircumference = 'Head circumference appears to be too large (normal range is 32-38 cm for newborns)';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // If no errors, return true
@@ -145,7 +158,7 @@ const NewbornManagement = () => {
     setShowForm(false); // Hide the form when cancel is clicked
   };
 
-  const generatePDF = () => {
+  const generatePDF = (useFiltered = false) => {
     const doc = new jsPDF();
     
     // Add title
@@ -153,9 +166,17 @@ const NewbornManagement = () => {
     doc.text('Newborn Records Report', 14, 20);
     doc.setFontSize(12);
     doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
+    
+    // Add search criteria if filtering was applied
+    if (useFiltered && searchTerm) {
+      doc.text(`Search criteria: "${searchTerm}"`, 14, 40);
+    }
+
+    // Determine which data to use
+    const recordsToUse = useFiltered ? filteredNewborns : newborns;
 
     // Create table data
-    const tableData = newborns.map(newborn => [
+    const tableData = recordsToUse.map(newborn => [
       newborn.name,
       formatDateForInput(newborn.birthDate),
       `${newborn.weight} kg`,
@@ -168,13 +189,17 @@ const NewbornManagement = () => {
     autoTable(doc, {
       head: [['Name', 'Birth Date', 'Weight', 'Height', 'Head Circ.', 'Status']],
       body: tableData,
-      startY: 40,
+      startY: useFiltered && searchTerm ? 50 : 40,
       styles: { fontSize: 10 },
       headStyles: { fillColor: [41, 128, 185] }
     });
 
-    // Save PDF
-    doc.save('newborn-records.pdf');
+    // Save PDF with appropriate filename
+    const filename = useFiltered && searchTerm
+      ? `newborn-records-${searchTerm.replace(/[^a-z0-9]/gi, '-')}.pdf`
+      : 'newborn-records.pdf';
+    
+    doc.save(filename);
   };
 
   // Add search functionality
@@ -196,7 +221,7 @@ const NewbornManagement = () => {
             <button onClick={handleAddNewborn} className="btn-primary">
               Add Newborn
             </button>
-            <button onClick={generatePDF} className="btn-secondary">
+            <button onClick={() => generatePDF(false)} className="btn-secondary">
               Generate PDF
             </button>
           </div>
@@ -209,6 +234,14 @@ const NewbornManagement = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
             />
+            {searchTerm && (
+              <button 
+                onClick={() => generatePDF(true)} 
+                className="search-download-btn"
+                title="Download filtered results">
+                Download Results
+              </button>
+            )}
           </div>
         </div>
 
@@ -225,6 +258,8 @@ const NewbornManagement = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
+                  pattern="[a-zA-Z\s.'-]+"
+                  title="Name should contain only letters, spaces, and common punctuation"
                 />
                 {errors.name && <div className="error">{errors.name}</div>}
               </div>
@@ -274,7 +309,10 @@ const NewbornManagement = () => {
                   name="headCircumference"
                   value={formData.headCircumference}
                   onChange={handleInputChange}
+                  pattern="[0-9]*\.?[0-9]+"
+                  title="Please enter a valid positive number"
                 />
+                {errors.headCircumference && <div className="error">{errors.headCircumference}</div>}
               </div>
 
               <div className="form-group">

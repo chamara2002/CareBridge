@@ -116,7 +116,7 @@ th {
 }
 
 .status-completed {
-    background-color: #b4cf97 !important; /* Light green */
+    background-color: #9cca6a !important; /* Light green */
     color: white;
 }
 
@@ -126,12 +126,12 @@ th {
 }
 
 .status-missed {
-    background-color: #fca9a9 !important; /* Light red */
+    background-color: #ff7979 !important; /* Light red */
     color: white;
 }
 
 .status-scheduled {
-    background-color: #ffe6ab !important; /* Light yellow */
+    background-color: #faca5b !important; /* Light yellow */
     color: #333; /* Dark text for contrast */
 }
 
