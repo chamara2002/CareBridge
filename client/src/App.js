@@ -69,31 +69,62 @@ const App = () => {
   }
 
   return (
-    <Router>
-      <Navbar user={user} logout={logout} />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/SignUp" element={<SignUp />} />
-        <Route path="/SignIn" element={<SignIn login={login} />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/MidMothers" element={<MothersManagement />} />
-        <Route path="/MidNewborns" element={<NewbornManagement />} />
-        <Route path="/MidVac" element={<MidVac />} />
-        <Route path="/appointmenthub" element={<AppointmentHub />} />
-        <Route path="/createappointment" element={<CreateAppointment />} />
-        <Route path="/manageappointment" element={<ManageAppointment />} />
-        <Route path="/Service" element={<Service />} />
-        <Route path="/Contact" element={<Contact />} />
-        <Route path="/AIMoodTracker" element={<AIMoodTracker />} /> 
-        <Route path="/Mother/MotherDashboard" element={<MotherDashboard />} />
-        <Route path="/profile" element={<UserProfile />} />
-        <Route path="/AppointmentManagement" element={<ManageAppointments />} />
-        <Route path="/Mother/MotherDetails" element={<MotherDetails />} /> {/* Add the new route */}
-        <Route path="/Mother/NewbornDetails" element={<MotherNewborns />} /> {/* New route for mother's newborns */}
-        <Route path="/Mother/VaccineDetails" element={<NewbornVaccines />} />
-      </Routes>
-      <Footer />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Navbar user={user} logout={logout} />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/SignUp" element={<SignUp />} />
+          <Route path="/SignIn" element={<SignIn login={login} />} />
+          
+          {/* Protected routes with role-based access */}
+          <Route path="/dashboard" element={
+            <ProtectedRoute element={<Dashboard />} allowedRoles={['midwife', 'admin']} />
+          } />
+          <Route path="/Mother/MotherDashboard" element={
+            <ProtectedRoute element={<MotherDashboard />} allowedRoles={['mother']} />
+          } />
+          <Route path="/admin-dashboard" element={
+            <ProtectedRoute element={<AdminDashboard />} allowedRoles={['admin']} />
+          } />
+          
+          {/* Other protected routes */}
+          <Route path="/MidMothers" element={
+            <ProtectedRoute element={<MothersManagement />} allowedRoles={['midwife', 'admin']} />
+          } />
+          <Route path="/MidNewborns" element={
+            <ProtectedRoute element={<NewbornManagement />} allowedRoles={['midwife', 'admin']} />
+          } />
+          <Route path="/MidVac" element={
+            <ProtectedRoute element={<MidVac />} allowedRoles={['midwife', 'admin']} />
+          } />
+          <Route path="/appointmenthub" element={<AppointmentHub />} />
+          <Route path="/createappointment" element={<CreateAppointment />} />
+          <Route path="/manageappointment" element={<ManageAppointment />} />
+          <Route path="/Service" element={<Service />} />
+          <Route path="/Contact" element={<Contact />} />
+          <Route path="/AIMoodTracker" element={
+            <ProtectedRoute element={<AIMoodTracker />} allowedRoles={['mother']} />
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute element={<UserProfile />} allowedRoles={['mother', 'midwife', 'admin']} />
+          } />
+          <Route path="/AppointmentManagement" element={
+            <ProtectedRoute element={<ManageAppointments />} allowedRoles={['midwife', 'admin']} />
+          } />
+          <Route path="/Mother/MotherDetails" element={
+            <ProtectedRoute element={<MotherDetails />} allowedRoles={['mother']} />
+          } />
+          <Route path="/Mother/NewbornDetails" element={
+            <ProtectedRoute element={<MotherNewborns />} allowedRoles={['mother']} />
+          } />
+          <Route path="/Mother/VaccineDetails" element={
+            <ProtectedRoute element={<NewbornVaccines />} allowedRoles={['mother']} />
+          } />
+        </Routes>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 };
 
