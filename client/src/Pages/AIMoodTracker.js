@@ -1,8 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import * as facemesh from '@tensorflow-models/facemesh';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
 import './AIMoodTracker.css';
 
 const AIMoodTracker = () => {
@@ -11,7 +10,6 @@ const AIMoodTracker = () => {
   const canvasRef = useRef(null);
   const [model, setModel] = useState(null);
   const [mood, setMood] = useState(null);
-  const [moodHistory, setMoodHistory] = useState([]);
   const [capturedImage, setCapturedImage] = useState(null);
   const [logs, setLogs] = useState([]);
   const [userInput, setUserInput] = useState('');
@@ -259,15 +257,6 @@ const AIMoodTracker = () => {
         console.log(`Detected mood: ${detectedMood} with ${confidence}% confidence`);
         setMood(detectedMood);
         
-        setMoodHistory(prev => {
-          const newHistory = [...prev, {
-            mood: detectedMood,
-            timestamp: new Date(),
-            confidence
-          }];
-          return newHistory.slice(-20);
-        });
-        
         generateMoodInsights(detectedMood);
         generateWellnessRecommendations(detectedMood, wellness);
         
@@ -463,267 +452,149 @@ const AIMoodTracker = () => {
     }
   };
 
-  // PDF Report Generation
+  // Add generateReport function
   const generateReport = () => {
-    try {
-      const doc = new jsPDF();
-      autoTable(doc);
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.width;
+    let yPos = 20;
 
-      // Validate logs
-      console.log("Logs before PDF generation:", logs);
-      if (!logs || !Array.isArray(logs)) {
-        alert("No mood data available. Please record at least one mood entry.");
-        return;
-      }
-
-      doc.setFontSize(22);
-      doc.setTextColor(31, 97, 141);
-      doc.text("Your Wellness & Mood Report", 105, 20, { align: 'center' });
+    // Helper function to add sections with proper spacing
+    const addSection = (title, content, fontSize = 12) => {
+      yPos += 15;
+      doc.setFontSize(16);
+      doc.setFont(undefined, 'bold');
+      doc.text(title, 20, yPos);
+      yPos += 10;
+      doc.setFontSize(fontSize);
+      doc.setFont(undefined, 'normal');
       
-      doc.setFontSize(12);
-      doc.setTextColor(100, 100, 100);
-      doc.text(`Generated on ${new Date().toLocaleDateString()}`, 105, 30, { align: 'center' });
-      
-      doc.setFontSize(18);
-      doc.setTextColor(41, 128, 185);
-      doc.text("Your Wellness Metrics", 20, 50);
-      
-      doc.setFontSize(12);
-      doc.setTextColor(66, 66, 66);
-      
-      doc.text("Sleep:", 30, 60);
-      doc.setDrawColor(200, 200, 200);
-      doc.setFillColor(52, 152, 219);
-      doc.rect(70, 56, 100, 6, 'S');
-      doc.rect(70, 56, (wellness.sleep/12) * 100, 6, 'F');
-      doc.text(`${wellness.sleep} hours`, 175, 60);
-      
-      doc.text("Nutrition:", 30, 70);
-      doc.setDrawColor(200, 200, 200);
-      doc.setFillColor(46, 204, 113);
-      doc.rect(70, 66, 100, 6, 'S');
-      doc.rect(70, 66, (wellness.nutrition/5) * 100, 6, 'F');
-      doc.text(`${wellness.nutrition}/5`, 175, 70);
-      
-      doc.text("Exercise:", 30, 80);
-      doc.setDrawColor(200, 200, 200);
-      doc.setFillColor(155, 89, 182);
-      doc.rect(70, 76, 100, 6, 'S');
-      doc.rect(70, 76, (wellness.exercise/5) * 100, 6, 'F');
-      doc.text(`${wellness.exercise}/5`, 175, 80);
-      
-      doc.text("Stress Level:", 30, 90);
-      doc.setDrawColor(200, 200, 200);
-      doc.setFillColor(231, 76, 60);
-      doc.rect(70, 86, 100, 6, 'S');
-      doc.rect(70, 86, (wellness.stress/5) * 100, 6, 'F');
-      doc.text(`${wellness.stress}/5`, 175, 90);
-      
-      doc.setFontSize(18);
-      doc.setTextColor(41, 128, 185);
-      doc.text("Your Mood History", 20, 110);
-      
-      const tableData = logs
-        .filter(log => {
-          const isValid = log &&
-            typeof log.date === 'string' && log.date.trim() &&
-            typeof log.type === 'string' && ['facial', 'manual', 'text'].includes(log.type) &&
-            typeof log.mood === 'string' && log.mood.trim();
-          if (!isValid) {
-            console.warn("Filtered out invalid log entry:", log);
-          }
-          return isValid;
-        })
-        .map(log => [
-          log.date,
-          log.type === 'text' ? 'Text Analysis' : log.type === 'facial' ? 'Facial Analysis' : 'Manual Entry',
-          log.mood.charAt(0).toUpperCase() + log.mood.slice(1)
-        ]);
-
-      console.log("Table data for PDF:", tableData);
-
-      if (typeof doc.autoTable !== 'function') {
-        console.error("autoTable is not available on jsPDF instance");
-        throw new Error("PDF table generation is not supported. Please ensure jspdf-autotable is correctly installed.");
-      }
-
-      let y = 130; // Default y position
-      if (tableData.length > 0) {
-        doc.autoTable({
-          startY: 120,
-          head: [['Date', 'Analysis Type', 'Detected Mood']],
-          body: tableData,
-          theme: 'striped',
-          headStyles: {
-            fillColor: [41, 128, 185],
-            textColor: 255
-          },
-          styles: {
-            cellPadding: 5,
-            fontSize: 10
-          },
-          columnStyles: {
-            0: { cellWidth: 70 },
-            1: { cellWidth: 50 },
-            2: { cellWidth: 40 }
-          }
+      if (Array.isArray(content)) {
+        content.forEach(item => {
+          const lines = doc.splitTextToSize(item, pageWidth - 40);
+          doc.text(lines, 20, yPos);
+          yPos += (lines.length * 7);
         });
-        y = doc.previousAutoTable.finalY + 20;
       } else {
-        doc.setFontSize(12);
-        doc.setTextColor(100, 100, 100);
-        doc.text("No valid mood data has been recorded yet.", 30, 120);
+        const lines = doc.splitTextToSize(content, pageWidth - 40);
+        doc.text(lines, 20, yPos);
+        yPos += (lines.length * 7);
       }
+    };
+
+    // Add page header with logo/branding
+    doc.setFillColor(52, 152, 219); // Blue header
+    doc.rect(0, 0, pageWidth, 40, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont(undefined, 'bold');
+    doc.text('CareBridge Wellness Report', pageWidth/2, 25, { align: 'center' });
+    
+    // Reset text color and position
+    doc.setTextColor(0, 0, 0);
+    yPos = 50;
+
+    // Add report summary
+    const currentDate = new Date().toLocaleString();
+    doc.setFontSize(12);
+    doc.text(`Report Generated: ${currentDate}`, 20, yPos);
+    yPos += 10;
+
+    // Current Mood Analysis with visual indicator
+    if (mood) {
+      addSection('Current Mood Analysis', [
+        `Current Mood State: ${mood.charAt(0).toUpperCase() + mood.slice(1)}`,
+        logs.length > 0 && logs[logs.length-1].confidence ? 
+          `Confidence Level: ${logs[logs.length-1].confidence}%` : '',
+        `Time of Analysis: ${new Date().toLocaleTimeString()}`,
+        moodInsight || ''
+      ]);
+    }
+
+    // Wellness Metrics with visual representation
+    const wellnessData = [
+      `Sleep: ${wellness.sleep} hours ${wellness.sleep < 6 ? '(Below recommended)' : '(Good)'}`,
+      `Nutrition Level: ${wellness.nutrition}/5`,
+      `Exercise Level: ${wellness.exercise}/5`,
+      `Stress Level: ${wellness.stress}/5`
+    ];
+    addSection('Wellness Assessment', wellnessData);
+
+    // Recommendations with categorization
+    if (wellnessRecommendations.length > 0) {
+      const formattedRecs = wellnessRecommendations.map((rec, index) => 
+        `${index + 1}. ${rec}`
+      );
+      addSection('Personalized Wellness Recommendations', formattedRecs);
+    }
+
+    // Mood History Analysis
+    if (logs.length > 0) {
+      const recentLogs = logs.slice(-5);
+      const moodHistory = recentLogs.map(log => 
+        `${log.date} - ${log.type.charAt(0).toUpperCase() + log.type.slice(1)}: ` +
+        `${log.mood.charAt(0).toUpperCase() + log.mood.slice(1)}` +
+        `${log.confidence ? ` (${log.confidence}% confidence)` : ''}`
+      );
+      addSection('Recent Mood History (Last 5 Entries)', moodHistory);
+
+      // Enhanced mood distribution analysis
+      // Map "positive" text mood to "happy" facial mood for consistency
+      const normalizedLogs = logs.map(log => ({
+        ...log,
+        normalizedMood: log.mood === 'positive' ? 'happy' : 
+                         log.mood === 'negative' ? 'sad' : log.mood
+      }));
       
-      const pageHeight = doc.internal.pageSize.height;
-      if (y > pageHeight - 60) {
-        doc.addPage();
-        y = 20;
-      }
+      // Count occurrences of each mood type
+      const moodCounts = normalizedLogs.reduce((acc, log) => {
+        const mood = log.normalizedMood;
+        acc[mood] = (acc[mood] || 0) + 1;
+        return acc;
+      }, {});
       
-      doc.setFontSize(18);
-      doc.setTextColor(41, 128, 185);
-      doc.text("Insights for Pregnant Mothers", 20, y);
+      // Calculate total entries for percentage calculation
+      const totalEntries = Object.values(moodCounts).reduce((sum, count) => sum + count, 0);
       
-      y += 10;
-      doc.setFontSize(12);
-      doc.setTextColor(66, 66, 66);
-      
-      let happyCount = logs.filter(log => log.mood === 'happy' || log.mood === 'positive').length;
-      let sadCount = logs.filter(log => log.mood === 'sad' || log.mood === 'negative').length;
-      let neutralCount = logs.filter(log => log.mood === 'neutral').length;
-      
-      let dominantMood = "neutral";
-      if (happyCount > sadCount && happyCount > neutralCount) dominantMood = "positive";
-      if (sadCount > happyCount && sadCount > neutralCount) dominantMood = "negative";
-      
-      const total = Math.max(1, happyCount + sadCount + neutralCount);
-      const happyPercentage = Math.round((happyCount / total) * 100);
-      const sadPercentage = Math.round((sadCount / total) * 100);
-      const neutralPercentage = Math.round((neutralCount / total) * 100);
-      
-      doc.text(`Dominant Mood: ${dominantMood.charAt(0).toUpperCase() + dominantMood.slice(1)}`, 30, y += 10);
-      doc.text(`Mood Distribution: ${happyPercentage}% Positive, ${sadPercentage}% Negative, ${neutralPercentage}% Neutral`, 30, y += 10);
-      
-      if (logs.length >= 3) {
-        const firstThird = logs.slice(0, Math.floor(logs.length/3));
-        const lastThird = logs.slice(-Math.floor(logs.length/3));
-        
-        const firstPositiveCount = firstThird.filter(log => log.mood === 'happy' || log.mood === 'positive').length;
-        const lastPositiveCount = lastThird.filter(log => log.mood === 'happy' || log.mood === 'positive').length;
-        
-        const firstPositiveRatio = firstPositiveCount / firstThird.length;
-        const lastPositiveRatio = lastPositiveCount / lastThird.length;
-        
-        let trendMessage = "Your mood appears stable over time.";
-        if (lastPositiveRatio - firstPositiveRatio > 0.2) {
-          trendMessage = "Your mood is trending more positive over time. Great progress!";
-        } else if (firstPositiveRatio - lastPositiveRatio > 0.2) {
-          trendMessage = "Your mood appears to be trending more negative recently.";
-        }
-        
-        doc.text(`Trend Analysis: ${trendMessage}`, 30, y += 10);
-      }
-      
-      y += 10;
-      doc.text("Personalized Recommendations:", 30, y);
-      
-      let recommendations = [
-        "Practice gentle prenatal yoga or stretching to reduce stress and improve mood.",
-        "Ensure 7-8 hours of sleep nightly to support emotional health during pregnancy.",
-        "Connect with other expectant mothers for emotional support and shared experiences.",
-        "Journal your feelings daily to process emotions and track your well-being."
-      ];
-      
-      recommendations.forEach(suggestion => {
-        if (y > pageHeight - 20) {
-          doc.addPage();
-          y = 20;
-        }
-        y += 10;
-        doc.text(`• ${suggestion}`, 35, y);
+      // Format mood distribution with one decimal place percentage
+      const moodDistribution = Object.entries(moodCounts).map(([mood, count]) => {
+        const percentage = ((count/totalEntries) * 100).toFixed(1);
+        return `${mood.charAt(0).toUpperCase() + mood.slice(1)}: ${percentage}%`;
       });
       
-      y += 15;
-      if (y > pageHeight - 30) {
-        doc.addPage();
-        y = 20;
-      }
-      
-      doc.setFontSize(16);
-      doc.setTextColor(41, 128, 185);
-      doc.text("Specific Wellness Actions", 20, y);
-      
-      y += 10;
-      doc.setFontSize(12);
-      doc.setTextColor(66, 66, 66);
-      
-      const wellnessActions = {
-        sleep: {
-          low: "Try going to bed 15 minutes earlier each night until you reach 7-8 hours of sleep.",
-          high: "Your sleep duration looks good. Focus on sleep quality by creating a calm bedtime routine."
-        },
-        nutrition: {
-          low: "Consider adding one more serving of fruits or vegetables to your daily meals.",
-          high: "You're rating your nutrition well! Continue your balanced eating habits."
-        },
-        exercise: {
-          low: "Start with just 5 minutes of movement daily, gradually increasing as it becomes easier.",
-          high: "You're staying active! Try adding variety to your exercise routine to keep it engaging."
-        },
-        stress: {
-          high: "High stress levels detected. Try the 4-7-8 breathing technique: inhale for 4, hold for 7, exhale for 8.",
-          low: "Your stress levels appear manageable. Continue your effective coping strategies."
-        }
-      };
-      
-      if (wellness.sleep < 6) {
-        doc.text(`• Sleep: ${wellnessActions.sleep.low}`, 30, y += 10);
-      } else {
-        doc.text(`• Sleep: ${wellnessActions.sleep.high}`, 30, y += 10);
-      }
-      
-      if (wellness.nutrition < 3) {
-        doc.text(`• Nutrition: ${wellnessActions.nutrition.low}`, 30, y += 10);
-      } else {
-        doc.text(`• Nutrition: ${wellnessActions.nutrition.high}`, 30, y += 10);
-      }
-      
-      if (wellness.exercise < 3) {
-        doc.text(`• Exercise: ${wellnessActions.exercise.low}`, 30, y += 10);
-      } else {
-        doc.text(`• Exercise: ${wellnessActions.exercise.high}`, 30, y += 10);
-      }
-      
-      if (wellness.stress > 3) {
-        doc.text(`• Stress: ${wellnessActions.stress.high}`, 30, y += 10);
-      } else {
-        doc.text(`• Stress: ${wellnessActions.stress.low}`, 30, y += 10);
-      }
-      
-      const pageCount = doc.internal.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        doc.setPage(i);
-        doc.setFontSize(10);
-        doc.setTextColor(150, 150, 150);
-        doc.text(`CareBridge Wellness Report - Page ${i} of ${pageCount}`, 105, 290, { align: 'center' });
-      }
-      
-      doc.save(`wellness-report-${new Date().toISOString().slice(0,10)}.pdf`);
-    } catch (error) {
-      console.error("Error generating PDF report:", error);
-      let userMessage = "Failed to generate PDF report.";
-      if (error.message.includes("autoTable")) {
-        userMessage = "PDF table generation failed. Please ensure the application is properly configured.";
-      } else if (error.message.includes("memory")) {
-        userMessage = "Memory issue detected. Try generating with fewer entries or use a different browser.";
-      } else if (error.message.includes("permission")) {
-        userMessage = "Download blocked. Check browser permissions or disable ad blockers.";
-      } else if (error.message.includes("Cannot read properties of undefined (reading 'startY')")) {
-        userMessage = "No valid mood data to generate report. Please record a mood entry (facial, manual, or text) and try again.";
-      }
-      alert(`${userMessage} Please try again or contact support.`);
+      addSection('Mood Distribution Analysis', moodDistribution);
     }
+
+    // Check if new page is needed
+    if (yPos > doc.internal.pageSize.height - 40) {
+      doc.addPage();
+      yPos = 20;
+    }
+
+    // Add action items and goals
+    const actionItems = [
+      "• Keep tracking your mood regularly for better self-awareness",
+      "• Follow the personalized recommendations provided",
+      "• Consider consulting with healthcare professionals if needed",
+      "• Maintain a consistent sleep schedule",
+      "• Practice stress management techniques regularly"
+    ];
+    addSection('Recommended Action Items', actionItems);
+
+    // Add footer
+    const pageCount = doc.internal.getNumberOfPages();
+    doc.setFontSize(10);
+    for(let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.text(
+        `Page ${i} of ${pageCount} | CareBridge Wellness Report | Generated on ${currentDate}`,
+        pageWidth/2,
+        doc.internal.pageSize.height - 10,
+        { align: 'center' }
+      );
+    }
+
+    // Save the PDF
+    doc.save(`CareBridge-Wellness-Report-${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
   // JSX
@@ -928,32 +799,22 @@ const AIMoodTracker = () => {
         </div>
       </section>
 
-      {moodHistory.length > 0 && (
-        <section className="tracker-section">
-          <h2>Your Mood Patterns</h2>
-          <div className="mood-history-visualization">
-            <div className="mood-timeline">
-              {moodHistory.map((entry, index) => (
-                <div 
-                  key={index}
-                  className={`mood-point ${entry.mood}`}
-                  title={`${entry.mood} (${entry.confidence || 'N/A'}% confidence) at ${entry.timestamp.toLocaleTimeString()}`}
-                  style={{height: `${Math.max(20, entry.confidence || 50)}%`}}
-                />
-              ))}
-            </div>
-            <div className="timeline-labels">
-              <span>Earlier</span>
-              <span>Recent</span>
-            </div>
-          </div>
-        </section>
-      )}
-
       <section className="tracker-section">
-        <h2>Reports & Analysis</h2>
-        <button onClick={generateReport} className="action-btn download-btn">
-          <span className="icon download"></span> Download Comprehensive Report
+        <h2>Generate Report</h2>
+        <button 
+          onClick={generateReport} 
+          className="action-btn report-btn"
+          style={{
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            marginTop: '10px'
+          }}
+        >
+          Generate PDF Report
         </button>
       </section>
     </div>

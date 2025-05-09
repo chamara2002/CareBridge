@@ -1,21 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaUserCircle } from 'react-icons/fa';
+import { AuthContext } from "../context/AuthContext";
 import "./Navbar.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userRole = localStorage.getItem("userRole"); // Store role in localStorage during login
-    if (token) {
-      setUser({ loggedIn: true, role: userRole });
-    }
-  }, []);
+  const { user, logout } = useContext(AuthContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -28,11 +21,9 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Logout function
+  // Use logout from context
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove token from storage
-    localStorage.removeItem("userRole"); // Remove role from storage
-    setUser(null); // Clear user state
+    logout();
     window.location.href = "/"; // Redirect to home
   };
 

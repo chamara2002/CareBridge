@@ -66,6 +66,21 @@
   padding: 8px 15px;
   border-radius: 4px;
   cursor: pointer;
+  margin-left: 10px;
+}
+
+.search-download-btn {
+  background: #aab2bd;
+  color: white;
+  border: none;
+  padding: 2px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.search-download-btn:hover {
+  background-color: rgb(136, 152, 171);
 }
 
 .btn-edit {
