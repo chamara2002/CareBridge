@@ -3,6 +3,8 @@ import axios from 'axios';
 import { jsPDF } from 'jspdf';
 import './report.css';
 
+
+
 const Motherreport = () => {
   const [mothers, setMothers] = useState([]);
 
@@ -94,4 +96,5 @@ const Motherreport = () => {
       {/* <Footer /> */}
     </div>
   );
-};
+            };
+  export default Motherreport;

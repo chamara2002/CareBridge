@@ -22,6 +22,8 @@ import MotherDetails from './Pages/Mother/MotherDetails'; // Import the new comp
 import MotherNewborns from './Pages/Mother/MotherNewborns'; // Import the new component
 import NewbornVaccines from './Pages/Mother/NewbornVaccines'; // Import the new component
 
+
+
 import AddMother from './Pages/NewBorn/NewBoarnForm/AddMother';
 import MotherHome from './Pages/NewBorn/NewbornHome/MotherHome';
 import Motherreport from './Pages/NewBorn/NewBornReport/Motherreport';
