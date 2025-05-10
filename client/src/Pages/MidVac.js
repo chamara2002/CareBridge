@@ -205,8 +205,11 @@ const MidVac = () => {
       // Add report info
       doc.setFontSize(11);
       doc.text(`Generated Date: ${new Date().toLocaleDateString()}`, 14, 50);
-      doc.text(`Total Records: ${vaccinations.length}`, 14, 58);
+      doc.text(`Total Records: ${filteredVaccinations.length}`, 14, 58);
       doc.text(`Filtered Status: ${statusFilter === 'all' ? 'All' : statusFilter}`, 14, 66);
+      if (searchTerm) {
+        doc.text(`Search Term: "${searchTerm}"`, 14, 74);
+      }
   
       const tableColumns = [
         "Newborn Name", 
@@ -216,7 +219,7 @@ const MidVac = () => {
         "Notes"
       ];
       
-      const tableRows = vaccinations.map(vac => [
+      const tableRows = filteredVaccinations.map(vac => [
         vac.newbornId?.name || 'N/A',
         vac.vaccineName,
         new Date(vac.scheduledDate).toLocaleDateString(),
@@ -228,7 +231,7 @@ const MidVac = () => {
       autoTable(doc, {
         head: [tableColumns],
         body: tableRows,
-        startY: 75,
+        startY: searchTerm ? 82 : 75,
         styles: { 
           fontSize: 10,
           cellPadding: 5
@@ -314,10 +317,16 @@ const MidVac = () => {
               <option value="Completed">Completed</option>
               <option value="Missed">Missed</option>
             </select>
+            <button 
+              onClick={generatePDF} 
+              className="btn-export"
+              title="Export filtered records to PDF"
+            >
+              Export Filtered Records
+            </button>
           </div>
           <div className="button-container">
             <button onClick={() => setShowForm(true)} className="btn-primary">Add Vaccination</button>
-            <button onClick={generatePDF} className="btn-export">Export PDF</button>
           </div>
         </div>
 
