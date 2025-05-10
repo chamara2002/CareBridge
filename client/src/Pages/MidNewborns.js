@@ -65,7 +65,7 @@ const NewbornManagement = () => {
   // Form validation function
   const validateForm = () => {
     const newErrors = {};
-    const { name, birthDate, weight, height, headCircumference } = formData;
+    const { name, birthDate, weight, height, headCircumference, motherId } = formData;
 
     // Name: Cannot be empty and should have at least 2 characters
     if (!name) {
@@ -98,7 +98,10 @@ const NewbornManagement = () => {
       newErrors.headCircumference = 'Head circumference appears to be too large (normal range is 32-38 cm for newborns)';
     }
     
-    // Removed motherId validation
+    // Mother ID validation - required when adding new newborn
+    if (!isEditing && !motherId) {
+      newErrors.motherId = 'Mother ID is required';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // If no errors, return true
@@ -123,12 +126,7 @@ const NewbornManagement = () => {
           newborn._id === formData._id ? { ...newborn, ...dataToSend } : newborn
         ));
       } else {
-        // When adding a new newborn, assign a default motherId or use the first one
-        const dataToSend = { 
-          ...formData,
-          motherId: mothers.length > 0 ? mothers[0]._id : '000000000000000000000000' // Use first mother or a default ID
-        };
-        const response = await axios.post('http://localhost:5000/api/midnewborns', dataToSend);
+        const response = await axios.post('http://localhost:5000/api/midnewborns', formData);
         setNewborns([...newborns, response.data]);
       }
       resetForm();
@@ -302,7 +300,26 @@ const NewbornManagement = () => {
                 {errors.name && <div className="error">{errors.name}</div>}
               </div>
 
-              {/* Removed Mother ID selection */}
+              {/* Mother ID selection - only show when adding new newborns */}
+              {!isEditing && (
+                <div className="form-group">
+                  <label>Mother:</label>
+                  <select
+                    name="motherId"
+                    value={formData.motherId}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Select a mother</option>
+                    {mothers.map(mother => (
+                      <option key={mother._id} value={mother._id}>
+                        {mother.name || `Mother ID: ${mother._id}`}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.motherId && <div className="error">{errors.motherId}</div>}
+                </div>
+              )}
 
               <div className="form-group">
                 <label>Birth Date:</label>
@@ -397,6 +414,7 @@ const NewbornManagement = () => {
             </thead>
             <tbody>
               {filteredNewborns.map((newborn) => {
+                
                 return (
                   <tr key={newborn._id} className={`status-${newborn.healthStatus.toLowerCase().replace(' ', '-')}`}>
                     <td>{newborn.name}</td>
