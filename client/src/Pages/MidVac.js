@@ -4,6 +4,8 @@ import MidMenu from './MidMenu';
 import './MidVac.css';
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MidVac = () => {
   const [vaccinations, setVaccinations] = useState([]);
@@ -120,8 +122,10 @@ const MidVac = () => {
     try {
       if (isEditing) {
         await axios.put(`http://localhost:5000/api/midvac/${formData.id}`, formData);
+        toast.success('Vaccination record updated successfully!');
       } else {
         await axios.post('http://localhost:5000/api/midvac', formData);
+        toast.success('New vaccination record added successfully!');
       }
       resetForm();
       setShowForm(false);
@@ -129,6 +133,7 @@ const MidVac = () => {
       await fetchVaccinations();
     } catch (error) {
       console.error('Error saving vaccination:', error);
+      toast.error('Failed to save vaccination record. Please try again.');
     }
   };
 
@@ -148,10 +153,12 @@ const MidVac = () => {
     if (window.confirm('Are you sure you want to delete this vaccination record?')) {
       try {
         await axios.delete(`http://localhost:5000/api/midvac/${id}`);
+        toast.success('Vaccination record deleted successfully!');
         // Fetch fresh data after deletion
         await fetchVaccinations();
       } catch (error) {
         console.error('Error deleting vaccination:', error);
+        toast.error('Failed to delete vaccination record. Please try again.');
       }
     }
   };
@@ -273,9 +280,10 @@ const MidVac = () => {
       // Save with a formatted filename
       const filename = `CareBridge_Vaccination_Records_${new Date().toISOString().split('T')[0]}.pdf`;
       doc.save(filename);
+      toast.info('PDF report generated successfully!');
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
+      toast.error('Failed to generate PDF. Please try again.');
     }
   };
   
@@ -295,6 +303,18 @@ const MidVac = () => {
   return (
     <MidMenu>
       <div className="vaccination-management">
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        
         <h2>Newborn Vaccination Management</h2>
         <div className="top-controls">
           <div className="filter-container">
