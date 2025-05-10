@@ -535,7 +535,7 @@ const AIMoodTracker = () => {
         `${log.mood.charAt(0).toUpperCase() + log.mood.slice(1)}` +
         `${log.confidence ? ` (${log.confidence}% confidence)` : ''}`
       );
-      addSection('Recent Mood History (Last 5 Entries)', moodHistory);
+      addSection('Recent Mood History (Last Entries)', moodHistory);
 
       // Enhanced mood distribution analysis
       // Map "positive" text mood to "happy" facial mood for consistency
@@ -601,8 +601,8 @@ const AIMoodTracker = () => {
   return (
     <div className="ai-mood-tracker">
       <header>
-        <h1>AI Mood Tracker</h1>
-        <p className="tagline">Intelligent wellness analysis and recommendations for mothers</p>
+        <h1>Mood Tracker</h1>
+        <p className="tagline">Wellness analysis and recommendations for mothers</p>
       </header>
 
       <section className="tracker-section">
