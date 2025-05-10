@@ -433,3 +433,35 @@ tr.multiple-birth td:first-child::before {
   text-align: center;
   font-weight: 500;
 }
+
+/* Add these styles to your existing CSS file */
+
+.name-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.name-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item {
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.suggestion-item:hover {
+  background-color: #f5f5f5;
+}
