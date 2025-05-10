@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const NewbornManagement = () => {
   const [newborns, setNewborns] = useState([]);
+  const [mothers, setMothers] = useState([]);
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -19,6 +20,7 @@ const NewbornManagement = () => {
     height: '',
     headCircumference: '',
     healthStatus: 'Healthy',
+    motherId: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -36,7 +38,26 @@ const NewbornManagement = () => {
         console.error('Error fetching newborns:', error);
       }
     };
+    
+    // Fetch mothers for the dropdown
+    const fetchMothers = async () => {
+      try {
+        // Adjust this endpoint to match your actual API for fetching mothers
+        const response = await axios.get('http://localhost:5000/api/users/mothers');
+        setMothers(response.data);
+      } catch (error) {
+        console.error('Error fetching mothers:', error);
+        // For demo purposes, create some sample mothers if the endpoint doesn't exist
+        setMothers([
+          { _id: '65f298d4f94397b9a839d768', name: 'Mother 1' },
+          { _id: '65f298d4f94397b9a839d769', name: 'Mother 2' },
+          { _id: '65f298d4f94397b9a839d770', name: 'Mother 3' }
+        ]);
+      }
+    };
+    
     fetchNewborns();
+    fetchMothers();
   }, []);
 
   // Handle input change
@@ -80,6 +101,8 @@ const NewbornManagement = () => {
     } else if (headCircumference && Number(headCircumference) > 60) {
       newErrors.headCircumference = 'Head circumference appears to be too large (normal range is 32-38 cm for newborns)';
     }
+    
+    // Removed motherId validation
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // If no errors, return true
@@ -96,18 +119,27 @@ const NewbornManagement = () => {
           console.error('Error: Newborn ID is missing.');
           return;
         }
-        await axios.put(`http://localhost:5000/api/midnewborns/${formData._id}`, formData);
+        const dataToSend = { ...formData };
+        delete dataToSend.motherId; // Don't send motherId when updating
+        
+        await axios.put(`http://localhost:5000/api/midnewborns/${formData._id}`, dataToSend);
         setNewborns(newborns.map((newborn) =>
-          newborn._id === formData._id ? formData : newborn
+          newborn._id === formData._id ? { ...newborn, ...dataToSend } : newborn
         ));
       } else {
-        const response = await axios.post('http://localhost:5000/api/midnewborns', formData);
+        // When adding a new newborn, assign a default motherId or use the first one
+        const dataToSend = { 
+          ...formData,
+          motherId: mothers.length > 0 ? mothers[0]._id : '000000000000000000000000' // Use first mother or a default ID
+        };
+        const response = await axios.post('http://localhost:5000/api/midnewborns', dataToSend);
         setNewborns([...newborns, response.data]);
       }
       resetForm();
       setShowForm(false); // Hide form after submit
     } catch (error) {
       console.error('Error saving newborn:', error);
+      alert('Error saving newborn: ' + (error.response?.data?.msg || error.message));
     }
   };
 
@@ -125,6 +157,7 @@ const NewbornManagement = () => {
     setShowForm(true); // Show the form when editing
   };
 
+<<<<<<< HEAD
   const handleDelete = async (newbornId) => {
     confirmAlert({
       title: 'Confirm Deletion',
@@ -150,6 +183,20 @@ const NewbornManagement = () => {
         }
       ]
     });
+=======
+  const handleDelete = async (id, name) => {
+    // Ask for confirmation before deleting
+    if (!window.confirm(`Are you sure you want to delete the record for ${name}?`)) {
+      return; // If user clicks Cancel, do nothing
+    }
+    
+    try {
+      await axios.delete(`http://localhost:5000/api/midnewborns/${id}`);
+      setNewborns(newborns.filter((newborn) => newborn._id !== id));
+    } catch (error) {
+      console.error('Error deleting newborn:', error);
+    }
+>>>>>>> 7f767629f883c59c786f1c548b9864fe1cf23ed4
   };
   // Reset form and state
   const resetForm = () => {
@@ -161,6 +208,7 @@ const NewbornManagement = () => {
       height: '',
       headCircumference: '',
       healthStatus: 'Healthy',
+      motherId: '',
     });
     setIsEditing(false);
     setErrors({}); // Clear errors when resetting the form
@@ -285,6 +333,8 @@ const NewbornManagement = () => {
                 {errors.name && <div className="error">{errors.name}</div>}
               </div>
 
+              {/* Removed Mother ID selection */}
+
               <div className="form-group">
                 <label>Birth Date:</label>
                 <input
@@ -377,28 +427,30 @@ const NewbornManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredNewborns.map((newborn) => (
-                <tr key={newborn._id} className={`status-${newborn.healthStatus.toLowerCase().replace(' ', '-')}`}>
-                  <td>{newborn.name}</td>
-                  <td>{formatDateForInput(newborn.birthDate)}</td>
-                  <td>{newborn.weight}</td>
-                  <td>{newborn.height}</td>
-                  <td>{newborn.headCircumference}</td>
-                  <td>
-                    <span className={`status-badge ${newborn.healthStatus.toLowerCase().replace(' ', '-')}`}>
-                      {newborn.healthStatus}
-                    </span>
-                  </td>
-                  <td className="actions">
-                    <button onClick={() => handleEdit(newborn)} className="btn-edit">
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(newborn._id)} className="btn-delete">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {filteredNewborns.map((newborn) => {
+                return (
+                  <tr key={newborn._id} className={`status-${newborn.healthStatus.toLowerCase().replace(' ', '-')}`}>
+                    <td>{newborn.name}</td>
+                    <td>{formatDateForInput(newborn.birthDate)}</td>
+                    <td>{newborn.weight}</td>
+                    <td>{newborn.height}</td>
+                    <td>{newborn.headCircumference}</td>
+                    <td>
+                      <span className={`status-badge ${newborn.healthStatus.toLowerCase().replace(' ', '-')}`}>
+                        {newborn.healthStatus}
+                      </span>
+                    </td>
+                    <td className="actions">
+                      <button onClick={() => handleEdit(newborn)} className="btn-edit">
+                        Edit
+                      </button>
+                      <button onClick={() => handleDelete(newborn._id, newborn.name)} className="btn-delete">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
