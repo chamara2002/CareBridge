@@ -4,6 +4,10 @@ import MidMenu from './MidMenu';
 import './MidNewborns.css';
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const NewbornManagement = () => {
   const [newborns, setNewborns] = useState([]);
@@ -121,15 +125,32 @@ const NewbornManagement = () => {
     setShowForm(true); // Show the form when editing
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/midnewborns/${id}`);
-      setNewborns(newborns.filter((newborn) => newborn._id !== id));
-    } catch (error) {
-      console.error('Error deleting newborn:', error);
-    }
+  const handleDelete = async (newbornId) => {
+    confirmAlert({
+      title: 'Confirm Deletion',
+      message: 'Are you sure you want to delete this newborn record?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.delete(`http://localhost:5000/api/midnewborns/${newbornId}`);
+              // Update the newborns state by removing the deleted newborn
+              setNewborns(newborns.filter((newborn) => newborn._id !== newbornId));
+              toast.success('Newborn record deleted successfully');
+            } catch (error) {
+              console.error('Error deleting newborn:', error);
+              toast.error('Error deleting newborn record');
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
   };
-
   // Reset form and state
   const resetForm = () => {
     setFormData({
