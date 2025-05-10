@@ -131,17 +131,17 @@ th {
 }
 
 .status-healthy {
-  background-color: #b4cf97 !important;
+  background-color: #99ce5f !important;
   color: white;
 }
 
 .status-needs-attention {
-  background-color: #ffe6ab !important;
+  background-color: #fbd06d !important;
   color: white;
 }
 
 .status-critical {
-  background-color: #fca9a9 !important;
+  background-color: #f57373 !important;
   color: white;
 }
 
